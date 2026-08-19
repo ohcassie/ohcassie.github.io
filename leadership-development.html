@@ -83,6 +83,10 @@
   .focus-card{ background: var(--bg); border: 1px solid var(--grid-line-strong); border-left: 3px solid var(--sage); padding: 14px 16px; }
   .focus-card .fc-num{ font-family: var(--font-mono); font-size: 10.5px; color: var(--sage); letter-spacing: 0.08em; }
   .focus-card p{ margin: 6px 0 0; font-size: 13.5px; color: var(--paper); }
+  .focus-card p:first-child{ margin-top: 0; }
+  .bucket{ margin-bottom: 20px; }
+  .bucket:last-child{ margin-bottom: 0; }
+  .bucket-label{ font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--amber); margin-bottom: 10px; }
 
   .metric-row{ display:flex; gap: 20px; flex-wrap: wrap; margin: 20px 0; }
   .metric{ flex:1; min-width: 180px; background: var(--bg-panel); border: 1px solid var(--grid-line-strong); padding: 20px; text-align:center; }
@@ -148,7 +152,7 @@
         <button class="track-tab" data-track="mid" onclick="setTrack('mid')">Mid-Level Manager</button>
       </div>
       <div class="track-sub" id="track-sub"></div>
-      <div class="focus-grid" id="focus-grid"></div>
+      <div id="focus-container"></div>
     </div>
   </section>
 
@@ -223,17 +227,40 @@
     },
     mid: {
       sub: "For leaders managing other managers, translating strategy downward.",
-      focus: [
-        "Governance: how decisions actually get made and who has authority over what",
-        "Aligning day-to-day team goals to organizational strategy",
-        "Reading and building process maps to see how work actually flows across teams",
-        "Product knowledge deep enough to lead credibly, not just administratively",
-        "The people processes: promotion calendar, goal setting, and performance reviews",
-        "Setting expectations and coaching conversations that develop a team, not just correct it",
-        "Creating and running an RFP process, from need to vendor decision",
-        "Reading a P&amp;L and building real business acumen",
-        "Building an effective business case that actually gets funded",
-        "Mastering difficult conversations, up, down, and across the org"
+      groups: [
+        {
+          label: "People Processes",
+          items: [ "The promotion calendar, goal setting, and performance reviews" ]
+        },
+        {
+          label: "Knowing the Business",
+          items: [
+            "Product knowledge deep enough to lead credibly, not just administratively",
+            "Reading and building process maps to see how work actually flows across teams",
+            "Reading a P&amp;L and building real business acumen"
+          ]
+        },
+        {
+          label: "Governance",
+          items: [
+            "How decisions actually get made and who has authority over what",
+            "Aligning day-to-day team goals to organizational strategy"
+          ]
+        },
+        {
+          label: "Setting Clear Expectations",
+          items: [
+            "Setting expectations and coaching conversations that develop a team, not just correct it",
+            "Mastering difficult conversations, up, down, and across the org"
+          ]
+        },
+        {
+          label: "Professional Development",
+          items: [
+            "Building an effective business case that actually gets funded",
+            "Creating and running an RFP process, from need to vendor decision"
+          ]
+        }
       ]
     }
   };
@@ -243,14 +270,39 @@
   function renderTrack(){
     const t = tracks[currentTrack];
     document.getElementById('track-sub').textContent = t.sub;
-    const grid = document.getElementById('focus-grid');
-    grid.innerHTML = '';
-    t.focus.forEach((text, idx) => {
-      const card = document.createElement('div');
-      card.className = 'focus-card';
-      card.innerHTML = '<div class="fc-num">' + String(idx + 1).padStart(2, '0') + '</div><p>' + text + '</p>';
-      grid.appendChild(card);
-    });
+    const container = document.getElementById('focus-container');
+    container.innerHTML = '';
+
+    if(t.groups){
+      t.groups.forEach(group => {
+        const bucket = document.createElement('div');
+        bucket.className = 'bucket';
+        const label = document.createElement('div');
+        label.className = 'bucket-label';
+        label.textContent = group.label;
+        bucket.appendChild(label);
+        const grid = document.createElement('div');
+        grid.className = 'focus-grid';
+        group.items.forEach(text => {
+          const card = document.createElement('div');
+          card.className = 'focus-card';
+          card.innerHTML = '<p>' + text + '</p>';
+          grid.appendChild(card);
+        });
+        bucket.appendChild(grid);
+        container.appendChild(bucket);
+      });
+    } else {
+      const grid = document.createElement('div');
+      grid.className = 'focus-grid';
+      t.focus.forEach((text, idx) => {
+        const card = document.createElement('div');
+        card.className = 'focus-card';
+        card.innerHTML = '<div class="fc-num">' + String(idx + 1).padStart(2, '0') + '</div><p>' + text + '</p>';
+        grid.appendChild(card);
+      });
+      container.appendChild(grid);
+    }
   }
 
   function setTrack(track){
