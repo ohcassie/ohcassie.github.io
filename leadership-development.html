@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Leadership Development, Cassie Kesterholt</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #142a40;
+    --bg-panel: #1b3752;
+    --bg-panel-2: #204064;
+    --grid-line: rgba(232,228,217,0.06);
+    --grid-line-strong: rgba(232,228,217,0.14);
+    --paper: #eae5d6;
+    --paper-dim: #b9c3cd;
+    --amber: #e0a83d;
+    --rust: #d6684a;
+    --sage: #6fae8c;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+    --font-body: 'Inter', sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      repeating-linear-gradient(0deg, var(--grid-line) 0px, var(--grid-line) 1px, transparent 1px, transparent 32px),
+      repeating-linear-gradient(90deg, var(--grid-line) 0px, var(--grid-line) 1px, transparent 1px, transparent 32px),
+      var(--bg);
+    color: var(--paper);
+    font-family: var(--font-body);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  a{ color: var(--amber); }
+  .sheet{ max-width: 980px; margin: 0 auto; padding: 28px 28px 80px; }
+  .titleblock{ border: 1.5px solid var(--grid-line-strong); padding: 22px 24px; margin-bottom: 40px; position: relative; }
+  .titleblock::before, .titleblock::after{ content: ""; position: absolute; width: 10px; height: 10px; border: 1.5px solid var(--amber); }
+  .titleblock::before{ top: -6px; left: -6px; border-right: none; border-bottom: none; }
+  .titleblock::after{ bottom: -6px; right: -6px; border-left: none; border-top: none; }
+  .tb-eyebrow{ font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--amber); margin-bottom: 10px; }
+  h1{ font-family: var(--font-display); font-weight: 700; font-size: clamp(28px, 4.2vw, 42px); margin: 0 0 14px; letter-spacing: -0.01em; color: var(--paper); }
+  .tb-meta{ display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px 24px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--grid-line-strong); }
+  .tb-meta div{ font-family: var(--font-mono); font-size: 12px; color: var(--paper-dim); }
+  .tb-meta span{ display:block; color: var(--paper); font-size: 13px; margin-top: 2px; }
+  .tb-status{ display:inline-block; margin-top: 16px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--bg); background: var(--amber); padding: 5px 10px; }
+  .dwg-label{ font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.1em; color: var(--amber); text-transform: uppercase; margin-bottom: 8px; display:flex; align-items:center; gap: 10px; }
+  .dwg-label::after{ content:""; flex:1; height:1px; background: var(--grid-line-strong); }
+  section.panel{ margin-bottom: 56px; }
+  h2{ font-family: var(--font-display); font-weight: 600; font-size: clamp(20px, 3vw, 26px); margin: 0 0 14px; color: var(--paper); }
+  p{ color: var(--paper-dim); margin: 0 0 14px; font-size: 15px; }
+  p.lede{ color: var(--paper); font-size: 16px; }
+  strong{ color: var(--paper); font-weight: 600; }
+
+  .widget{ background: var(--bg-panel); border: 1px solid var(--grid-line-strong); padding: 22px 24px 26px; margin: 20px 0 10px; }
+
+  .pillars{ display:grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; margin: 20px 0; }
+  .pillar{ background: var(--bg-panel); border: 1px solid var(--grid-line-strong); padding: 18px; cursor: pointer; transition: border-color 0.25s ease, background 0.25s ease; }
+  .pillar:hover{ border-color: var(--amber); }
+  .pillar.open{ background: var(--bg-panel-2); border-color: var(--amber); }
+  .pillar .p-tag{ font-family: var(--font-mono); font-size: 10.5px; color: var(--amber); letter-spacing: 0.08em; }
+  .pillar h4{ font-family: var(--font-display); font-size: 16px; margin: 8px 0 0; color: var(--paper); }
+  .pillar .p-detail{ display:none; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--grid-line); font-size: 13px; color: var(--paper-dim); }
+  .pillar.open .p-detail{ display:block; }
+
+  .flow{ display:flex; flex-direction:column; gap: 0; margin: 20px 0; }
+  .flow-step{ display:grid; grid-template-columns: 34px 1fr; gap: 16px; padding: 14px 0; border-top: 1px solid var(--grid-line-strong); }
+  .flow-step:last-child{ border-bottom: 1px solid var(--grid-line-strong); }
+  .flow-num{ font-family: var(--font-mono); font-size: 12px; color: var(--amber); padding-top: 2px; }
+  .flow-step h4{ font-family: var(--font-display); font-size: 15px; margin: 0 0 4px; color: var(--paper); }
+  .flow-step p{ margin:0; font-size: 13.5px; }
+
+  .track-tabs{ display:flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }
+  .track-tab{
+    font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.03em; padding: 8px 14px;
+    border: 1px solid var(--grid-line-strong); background: transparent; color: var(--paper-dim); cursor: pointer;
+  }
+  .track-tab.active{ background: var(--amber); color: var(--bg); border-color: var(--amber); }
+  .track-sub{ font-family: var(--font-mono); font-size: 12px; color: var(--paper-dim); margin-bottom: 16px; }
+  .focus-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+  .focus-card{ background: var(--bg); border: 1px solid var(--grid-line-strong); border-left: 3px solid var(--sage); padding: 14px 16px; }
+  .focus-card .fc-num{ font-family: var(--font-mono); font-size: 10.5px; color: var(--sage); letter-spacing: 0.08em; }
+  .focus-card p{ margin: 6px 0 0; font-size: 13.5px; color: var(--paper); }
+
+  .metric-row{ display:flex; gap: 20px; flex-wrap: wrap; margin: 20px 0; }
+  .metric{ flex:1; min-width: 180px; background: var(--bg-panel); border: 1px solid var(--grid-line-strong); padding: 20px; text-align:center; }
+  .metric .m-num{ font-family: var(--font-display); font-size: 34px; font-weight: 700; color: var(--sage); }
+  .metric .m-label{ font-family: var(--font-mono); font-size: 11.5px; color: var(--paper-dim); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 6px; }
+
+  footer{ margin-top: 60px; padding-top: 20px; border-top: 1px solid var(--grid-line-strong); font-family: var(--font-mono); font-size: 12px; color: var(--paper-dim); display:flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <div class="titleblock">
+    <div class="tb-eyebrow">Talent Development, Philosophy &amp; Case Study</div>
+    <h1>How I Think About Leadership Development</h1>
+    <p class="lede">A one-size-fits-all training calendar doesn't change how anyone leads. My approach starts with what the business actually needs from its leaders at each level, then builds backward to the program, not the other way around. This is the thinking behind OneCall's New Leader and Mid-Level Manager program.</p>
+    <div class="tb-status">Live, 500+ leaders trained</div>
+    <div class="tb-meta">
+      <div>Drawn by<span><a href="https://linkedin.com/in/casskesterholt" target="_blank" rel="noopener" style="color: inherit; text-decoration: underline;">Cassie Kesterholt</a></span></div>
+      <div>Scope<span>500+ leaders, built from scratch</span></div>
+      <div>Format<span>Manager enablement program</span></div>
+      <div>Status<span>Live, iterating each cohort</span></div>
+    </div>
+  </div>
+
+  <section class="panel">
+    <div class="dwg-label">DWG-01 · Philosophy</div>
+    <h2>Leadership development fails when it's generic</h2>
+    <p>Most leadership training gets built around a catalog of topics that sound right in the abstract: communication, delegation, feedback. What it usually skips is the harder question underneath: which behaviors does this specific business actually need more of right now, and from which leaders. Skip that question and you get a well-produced program nobody's behavior actually changes.</p>
+    <p>The other place generic programs fail is treating every leader the same. A first-time manager six months into their first direct report is solving a completely different problem than someone leading a team of managers. Same word, "leadership," two different jobs. A program that tries to serve both at once usually serves neither well.</p>
+    <div class="widget" style="padding: 28px 30px;">
+      <p class="lede" style="font-family: var(--font-display); font-size: 18px; font-style: italic; color: var(--paper); margin:0;">"Start from the org's real goals and the specific gap in front of a specific group of leaders. Build the program to close that gap. Everything else, the modules, the cadence, the format, is a means to that end, not the point of the exercise."</p>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="dwg-label">DWG-02 · Structural Plan</div>
+    <h2>Leadership sticks through three channels, not one</h2>
+    <p>Formal training alone rarely changes how someone actually leads. It has to be reinforced through what happens on the job and through the relationships around a leader. The program was designed to hit all three, deliberately, rather than defaulting to a training-only build. Click a pillar to open it.</p>
+    <div class="pillars" id="pillars">
+      <div class="pillar" data-detail="The hardest, most valuable leadership lessons come from real, challenging work: a hard conversation, a tough call under ambiguity, a project outside a leader's comfort zone. The program is built to create and name these moments deliberately, not just hope leaders stumble into them.">
+        <div class="p-tag">Channel 01</div><h4>Experiential</h4>
+        <div class="p-detail"></div>
+      </div>
+      <div class="pillar" data-detail="Leadership behavior changes fastest through relationships: a manager's own manager modeling the behavior, a peer cohort to be honest with, a coach or mentor asking the right question at the right time. The program builds these connections in on purpose instead of leaving them to chance.">
+        <div class="p-tag">Channel 02</div><h4>Relational</h4>
+        <div class="p-detail"></div>
+      </div>
+      <div class="pillar" data-detail="Structured content still matters: a shared vocabulary, a model for hard conversations, a framework for delegation. It's the smallest of the three levers on its own, but it gives the other two something concrete to reinforce instead of asking leaders to figure it out from nothing.">
+        <div class="p-tag">Channel 03</div><h4>Formal</h4>
+        <div class="p-detail"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="dwg-label">DWG-03 · Working Model</div>
+    <h2>Two audiences, two different programs</h2>
+    <p>The program splits into two tracks rather than one shared curriculum, because a brand-new manager and someone leading other managers are solving genuinely different problems. Pick a track to see what it actually focuses on.</p>
+    <div class="widget">
+      <div class="track-tabs" id="track-tabs">
+        <button class="track-tab active" data-track="new" onclick="setTrack('new')">New Leader</button>
+        <button class="track-tab" data-track="mid" onclick="setTrack('mid')">Mid-Level Manager</button>
+      </div>
+      <div class="track-sub" id="track-sub"></div>
+      <div class="focus-grid" id="focus-grid"></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="dwg-label">DWG-04 · Structural Plan</div>
+    <h2>How the program actually got built</h2>
+    <p>The same sequence every time, regardless of which track: understand the real gap before designing a single session.</p>
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-num">01</div>
+        <div><h4>Assess the current state</h4><p>Reviewed organizational and HR strategy, current leadership competencies, and where the real gaps sat, rather than starting from a list of generic leadership topics.</p></div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">02</div>
+        <div><h4>Define the priorities and objectives</h4><p>Turned the gap analysis into a short list of leadership priorities and concrete learning objectives for each track, so every session could be tied back to a specific behavior change.</p></div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">03</div>
+        <div><h4>Build the program</h4><p>Mapped the learning experience across all three channels, formal sessions, coaching structures, and on-the-job application, instead of defaulting to a training-only build.</p></div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">04</div>
+        <div><h4>Measure and iterate</h4><p>Defined how effectiveness would actually be tracked before launch, then used real cohort feedback and outcomes to adjust the next run rather than treating v1 as final.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="dwg-label">DWG-05 · Results</div>
+    <h2>What actually happened</h2>
+    <p>Built from scratch and delivered at real scale in its first year live.</p>
+    <div class="metric-row">
+      <div class="metric"><div class="m-num">500+</div><div class="m-label">Leaders trained</div></div>
+      <div class="metric"><div class="m-num">1,000+</div><div class="m-label">Training hours delivered in 2024</div></div>
+      <div class="metric"><div class="m-num">2</div><div class="m-label">Tracks, purpose-built per audience</div></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="dwg-label">DWG-06 · Sign-Off</div>
+    <h2>Where it stands</h2>
+    <p>Live and running, with each cohort feeding back into the next iteration rather than the program staying static after launch. The same philosophy now shapes every people program built since: start from the real gap, design for the specific audience in front of you, and reinforce it through more than one channel.</p>
+  </section>
+
+  <footer>
+    <div>Cassie Kesterholt <a href="https://linkedin.com/in/casskesterholt" target="_blank" rel="noopener">linkedin.com/in/casskesterholt</a></div>
+    <div>Leadership Development, Philosophy &amp; Case Study</div>
+  </footer>
+</div>
+
+<script>
+  document.querySelectorAll('.pillar').forEach(p => {
+    p.addEventListener('click', () => {
+      const wasOpen = p.classList.contains('open');
+      document.querySelectorAll('.pillar').forEach(o => o.classList.remove('open'));
+      if(!wasOpen){
+        p.classList.add('open');
+        p.querySelector('.p-detail').textContent = p.dataset.detail;
+      }
+    });
+  });
+
+  const tracks = {
+    new: {
+      sub: "For leaders in their first 0–2 years managing people directly.",
+      focus: [
+        "Making the shift from peer to manager without losing the relationships that got you there",
+        "Delegation basics: what to let go of, and how to do it without disappearing",
+        "Having the first genuinely hard conversation, feedback, a missed deadline, a performance concern",
+        "Setting expectations clearly enough that a direct report never has to guess where they stand"
+      ]
+    },
+    mid: {
+      sub: "For leaders managing other managers, translating strategy downward.",
+      focus: [
+        "Leading leaders: coaching your managers instead of solving their problems for them",
+        "Translating organizational strategy into goals your team can actually act on",
+        "Coaching a manager through their own first hard conversation or PIP",
+        "Cross-functional influence: getting alignment from peers you don't have authority over"
+      ]
+    }
+  };
+
+  let currentTrack = 'new';
+
+  function renderTrack(){
+    const t = tracks[currentTrack];
+    document.getElementById('track-sub').textContent = t.sub;
+    const grid = document.getElementById('focus-grid');
+    grid.innerHTML = '';
+    t.focus.forEach((text, idx) => {
+      const card = document.createElement('div');
+      card.className = 'focus-card';
+      card.innerHTML = '<div class="fc-num">' + String(idx + 1).padStart(2, '0') + '</div><p>' + text + '</p>';
+      grid.appendChild(card);
+    });
+  }
+
+  function setTrack(track){
+    currentTrack = track;
+    document.querySelectorAll('.track-tab').forEach(t => t.classList.toggle('active', t.dataset.track === track));
+    renderTrack();
+  }
+
+  renderTrack();
+</script>
+</body>
+</html>
