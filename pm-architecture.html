@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Performance Management Architecture, Cassie Kesterholt</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #142a40;
+    --bg-panel: #1b3752;
+    --bg-panel-2: #204064;
+    --grid-line: rgba(232,228,217,0.06);
+    --grid-line-strong: rgba(232,228,217,0.14);
+    --paper: #eae5d6;
+    --paper-dim: #b9c3cd;
+    --amber: #e0a83d;
+    --rust: #d6684a;
+    --sage: #6fae8c;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+    --font-body: 'Inter', sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      repeating-linear-gradient(0deg, var(--grid-line) 0px, var(--grid-line) 1px, transparent 1px, transparent 32px),
+      repeating-linear-gradient(90deg, var(--grid-line) 0px, var(--grid-line) 1px, transparent 1px, transparent 32px),
+      var(--bg);
+    color: var(--paper);
+    font-family: var(--font-body);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--amber); }
+  .sheet{
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 28px 28px 80px;
+  }
+  .titleblock{
+    border: 1.5px solid var(--grid-line-strong);
+    padding: 22px 24px;
+    margin-bottom: 40px;
+    position: relative;
+  }
+  .titleblock::before, .titleblock::after{
+    content: "";
+    position: absolute;
+    width: 10px; height: 10px;
+    border: 1.5px solid var(--amber);
+  }
+  .titleblock::before{ top: -6px; left: -6px; border-right: none; border-bottom: none; }
+  .titleblock::after{ bottom: -6px; right: -6px; border-left: none; border-top: none; }
+  .tb-eyebrow{
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 10px;
+  }
+  h1{
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(28px, 4.2vw, 42px);
+    margin: 0 0 14px;
+    letter-spacing: -0.01em;
+    color: var(--paper);
+  }
+  .tb-meta{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px 24px;
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid var(--grid-line-strong);
+  }
+  .tb-meta div{ font-family: var(--font-mono); font-size: 12px; color: var(--paper-dim); }
+  .tb-meta span{ display:block; color: var(--paper); font-size: 13px; margin-top: 2px; }
+  .tb-status{
+    display:inline-block;
+    margin-top: 16px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--bg);
+    background: var(--amber);
+    padding: 5px 10px;
+  }
+
+  .dwg-label{
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    color: var(--amber);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display:flex;
+    align-items:center;
+    gap: 10px;
+  }
+  .dwg-label::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background: var(--grid-line-strong);
+  }
+
+  section.panel{
+    margin-bottom: 56px;
+  }
+  h2{
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(20px, 3vw, 26px);
+    margin: 0 0 14px;
+    color: var(--paper);
+  }
+  p{ color: var(--paper-dim); margin: 0 0 14px; font-size: 15px; }
+  p.lede{ color: var(--paper); font-size: 16px; }
+  strong{ color: var(--paper); font-weight: 600; }
+
+  .pain-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin: 20px 0;
+  }
+  .pain-card{
+    background: var(--bg-panel);
+    border: 1px solid var(--grid-line-strong);
+    border-left: 3px solid var(--rust);
+    padding: 16px 18px;
+  }
+  .pain-card .pc-num{
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--rust);
+    letter-spacing: 0.08em;
+  }
+  .pain-card p{ margin: 8px 0 0; font-size: 14px; color: var(--paper); }
+
+  /* Calibration widget */
+  .widget{
+    background: var(--bg-panel);
+    border: 1px solid var(--grid-line-strong);
+    padding: 22px 24px 26px;
+    margin: 20px 0 10px;
+  }
+  .widget-head{
+    display:flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .widget-head h3{
+    font-family: var(--font-display);
+    font-size: 17px;
+    margin: 0;
+    color: var(--paper);
+  }
+  .toggle-group{
+    display:inline-flex;
+    border: 1px solid var(--grid-line-strong);
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+  .toggle-group button{
+    background: transparent;
+    border: none;
+    color: var(--paper-dim);
+    padding: 7px 14px;
+    cursor: pointer;
+    font-family: inherit;
+    letter-spacing: 0.04em;
+  }
+  .toggle-group button.active{
+    background: var(--amber);
+    color: var(--bg);
+  }
+  .bars{
+    display:flex;
+    align-items:flex-end;
+    gap: 14px;
+    height: 180px;
+    padding: 0 4px;
+    border-bottom: 1px solid var(--grid-line-strong);
+  }
+  .bar-col{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-end;
+    height:100%;
+  }
+  .bar{
+    width: 100%;
+    max-width: 56px;
+    background: var(--rust);
+    transition: height 0.6s cubic-bezier(.4,0,.2,1), background 0.6s ease;
+    min-height: 2px;
+  }
+  .bar-labels{
+    display:flex;
+    gap:14px;
+    padding: 0 4px;
+    margin-top: 8px;
+  }
+  .bar-labels div{
+    flex:1;
+    text-align:center;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--paper-dim);
+    max-width: 84px;
+  }
+  .widget-note{
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--paper-dim);
+    margin-top: 16px;
+  }
+
+  /* Process flow */
+  .flow{
+    display:flex;
+    flex-direction:column;
+    gap: 0;
+    margin: 20px 0;
+  }
+  .flow-step{
+    display:grid;
+    grid-template-columns: 34px 1fr;
+    gap: 16px;
+    padding: 14px 0;
+    border-top: 1px solid var(--grid-line-strong);
+  }
+  .flow-step:last-child{ border-bottom: 1px solid var(--grid-line-strong); }
+  .flow-num{
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--amber);
+    padding-top: 2px;
+  }
+  .flow-step h4{
+    font-family: var(--font-display);
+    font-size: 15px;
+    margin: 0 0 4px;
+    color: var(--paper);
+  }
+  .flow-step p{ margin:0; font-size: 13.5px; }
+
+  /* Pillars */
+  .pillars{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 14px;
+    margin: 20px 0;
+  }
+  .pillar{
+    background: var(--bg-panel);
+    border: 1px solid var(--grid-line-strong);
+    padding: 18px;
+    cursor: pointer;
+    transition: border-color 0.25s ease, background 0.25s ease;
+  }
+  .pillar:hover{ border-color: var(--amber); }
+  .pillar.open{ background: var(--bg-panel-2); border-color: var(--amber); }
+  .pillar .p-tag{
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    color: var(--amber);
+    letter-spacing: 0.08em;
+  }
+  .pillar h4{
+    font-family: var(--font-display);
+    font-size: 16px;
+    margin: 8px 0 0;
+    color: var(--paper);
+  }
+  .pillar .p-detail{
+    display:none;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--grid-line);
+    font-size: 13px;
+    color: var(--paper-dim);
+  }
+  .pillar.open .p-detail{ display:block; }
+
+  /* Demo */
+  .demo{
+    background: var(--bg-panel);
+    border: 1px solid var(--grid-line-strong);
+    padding: 24px 26px 28px;
+  }
+  .demo-grid{
+    display:grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 30px;
+    margin-top: 18px;
+  }
+  @media (max-width: 720px){ .demo-grid{ grid-template-columns: 1fr; } }
+  .toggle-row{
+    display:flex;
+    justify-content: space-between;
+    align-items:center;
+    gap: 14px;
+    padding: 12px 0;
+    border-top: 1px solid var(--grid-line);
+  }
+  .toggle-row:first-child{ border-top: none; }
+  .toggle-row .tr-text label{
+    display:block;
+    font-family: var(--font-display);
+    font-size: 14px;
+    color: var(--paper);
+  }
+  .toggle-row .tr-text .sub{
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--paper-dim);
+    margin-top: 2px;
+  }
+  .pillar2-block{
+    margin: 6px 0 12px;
+    padding: 12px 14px;
+    border: 1px dashed var(--grid-line-strong);
+  }
+  .pillar2-block > .tr-text{ margin-bottom: 4px; }
+  .pillar2-block .goal-row{
+    display:flex;
+    justify-content: space-between;
+    align-items:center;
+    padding: 8px 0 8px 14px;
+    border-top: 1px solid var(--grid-line);
+  }
+  .pillar2-block .goal-row .sub{
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--paper-dim);
+  }
+  .switch{
+    position: relative;
+    width: 118px;
+    height: 30px;
+    flex-shrink:0;
+    border: 1px solid var(--grid-line-strong);
+    background: transparent;
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.02em;
+    color: var(--paper-dim);
+    display:flex;
+  }
+  .switch .half{
+    flex:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition: background 0.2s ease, color 0.2s ease;
+    text-transform: uppercase;
+  }
+  .switch[data-state="meets"] .half.meets{ background: var(--sage); color: var(--bg); }
+  .switch[data-state="no"] .half.no{ background: var(--rust); color: var(--bg); }
+  .switch.small{ width: 92px; height: 26px; font-size: 9.5px; }
+  .readout{
+    border: 1px solid var(--grid-line-strong);
+    padding: 20px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+  }
+  .readout .r-label{
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--paper-dim);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .readout .r-score{
+    font-family: var(--font-display);
+    font-size: 52px;
+    font-weight: 700;
+    margin: 8px 0;
+    color: var(--sage);
+    transition: color 0.3s ease;
+  }
+  .readout .r-tag{
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--paper);
+    max-width: 220px;
+  }
+  .readout .r-old{
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid var(--grid-line);
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--paper-dim);
+  }
+  .readout .r-old span{ color: var(--rust); }
+
+  footer{
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top: 1px solid var(--grid-line-strong);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--paper-dim);
+    display:flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <div class="titleblock">
+    <div class="tb-eyebrow">Talent Development, Design Case Study</div>
+    <h1>Performance Management Architecture</h1>
+    <p class="lede">Redesigning how performance gets defined and rated after three years of rating inflation and a full reset of enterprise priorities. From stakeholder input to a four-pillar framework.</p>
+    <div class="tb-status">Rev: 2027 Initiative, In Design</div>
+    <div class="tb-meta">
+      <div>Drawn by<span><a href="https://linkedin.com/in/casskesterholt" target="_blank" rel="noopener" style="color: inherit; text-decoration: underline;">Cassie Kesterholt</a></span></div>
+      <div>Scope<span>Enterprise, ~2,000 colleagues</span></div>
+      <div>Scale<span>VP → IC</span></div>
+      <div>Status<span>Socialized, not yet launched</span></div>
+    </div>
+  </div>
+
+  <section class="panel">
+    <div class="dwg-label">DWG-01 · Site Survey</div>
+    <h2>The curve was broken, then the priorities changed under it</h2>
+    <p>Three years ago the message was simple: <strong>"shoot for a 3."</strong> On a 1–5 scale, a 3 was solid performance, and the push was mostly about getting reviews completed at all. It worked, but not the way it was supposed to: managers converged on the top of the scale, rating almost everyone a 5 rather than differentiating real performance.</p>
+    <p>Since then, a leadership change at the ELT level reset what the business actually tracks. Corporate priorities are now set multiple years out. Leaders started saying the same thing in different words: the review process takes too long, and it still doesn't measure the work that actually matters now.</p>
+    <p>A fourth pain point sat underneath the other three: the ELT sets 5 strategic initiatives, but turning those into real work further down the org depended entirely on the functional leader in between. Some leaders made that translation well; some didn't. Years of training investment aimed at closing that gap moved the needle, but not far enough.</p>
+    <div class="pain-grid">
+      <div class="pain-card"><div class="pc-num">01</div><p>Ratings clustered at the top. A flat "5" told leaders nothing about relative performance.</p></div>
+      <div class="pain-card"><div class="pc-num">02</div><p>The scale wasn't anchored to the priorities the ELT now holds leaders to for years at a time.</p></div>
+      <div class="pain-card"><div class="pc-num">03</div><p>Leaders described the process as long, and disconnected from the work it was meant to capture.</p></div>
+      <div class="pain-card"><div class="pc-num">04</div><p>The ELT's 5 strategic initiatives cascaded inconsistently. Some functional leaders translated them into real work, others didn't, and training alone hadn't closed the gap.</p></div>
+    </div>
+
+    <div class="widget">
+      <div class="widget-head">
+        <h3>The rating curve, before and after</h3>
+        <div class="toggle-group">
+          <button id="btn-before" class="active" onclick="setCurve('before')">Today</button>
+          <button id="btn-after" onclick="setCurve('after')">Target</button>
+        </div>
+      </div>
+      <div class="bars" id="bars"></div>
+      <div class="bar-labels">
+        <div>1, Below</div><div>2</div><div>3, Solid</div><div>4</div><div>5, Exceptional</div>
+      </div>
+      <div class="widget-note" id="bar-note">"Shoot for a 3" drove completion, but managers rated nearly everyone a 5, so the scale stopped differentiating anyone.</div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="dwg-label">DWG-02 · Stakeholder Input</div>
+    <h2>Built from what leaders were already saying in 1x1s</h2>
+    <p>Rather than design in a vacuum, the architecture started with the pain points HR business partners were already surfacing in their regular 1x1s with SLT, VP through Director. Their feedback set the frame, then the design went back out for stress-testing before anything was finalized.</p>
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-num">01</div>
+        <div><h4>Listen through the business partners</h4><p>Met with HRBPs to pull together the recurring themes from their VP- and Director-level 1x1s, where the current process helped and where it got in the way.</p></div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">02</div>
+        <div><h4>Draft the architecture</h4><p>Translated that feedback into a framework built around what actually matters to the business now, not what the old scale happened to measure.</p></div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">03</div>
+        <div><h4>Shop it, then rework it</h4><p>Ran the draft through focus groups and 1x1s with leaders and individual contributors across the org, iterating on the framework as real reactions came in.</p></div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">04</div>
+        <div><h4>Bring in ERG leaders</h4><p>Sought buy-in from ERG leaders specifically. They sit closest to culture and to the organization's most engaged colleagues, and their read on the framework mattered.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+  <section class="panel">
+    <div class="dwg-label">DWG-03 · Philosophy</div>
+    <h2>The statement that anchors the architecture</h2>
+    <p>Before any pillar or rating scale, the framework needed one sentence everyone could hold onto. This is that sentence.</p>
+    <div class="widget" style="padding: 28px 30px;">
+      <p class="lede" style="font-family: var(--font-display); font-size: 19px; font-style: italic; color: var(--paper); margin:0;">"Performance management is where accountability becomes real. Every colleague should be able to point to what they did, whether it moved the business forward, and whether it reflected who we say we are. A rating is not a favor. It's a clear, honest answer to the question: did the work happen, and did it happen the right way."</p>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="dwg-label">DWG-04 · Structural Plan</div>
+    <h2>Four pillars, replacing one flat scale</h2>
+    <p>The architecture trades a single top-heavy number for four distinct lenses on performance, each one answering a different question a "3" never could. Click a pillar to open it.</p>
+    <div class="pillars" id="pillars">
+      <div class="pillar" data-tag="01" data-title="Do the Job" data-detail="Rated Meets / Doesn't Meet, solely on the job description itself: did the colleague do the job as defined. That standard only works because the job descriptions are actually current. OneCall spent months updating job descriptions and job leveling for pay ahead of this, so the description on screen is a real one, not a stale placeholder.">
+        <div class="p-tag">01 · Meets / Doesn't Meet</div><h4>Do the Job</h4>
+        <div class="p-detail"></div>
+      </div>
+      <div class="pillar" data-tag="02" data-title="Move the Business Forward" data-detail="Rated Meets / Doesn't Meet. The colleague sets 3 SMART goals that ladder directly to the ELT's locked-in corporate priorities, showing exactly how individual work contributes to departmental and organizational outcomes. Each goal specifies its own required outcome, metric, and timeline, so accountability isn't vague, and each is scored individually, so the backend math is just 0s and 1s. This is also where the cascade problem gets solved structurally: instead of relying on every functional leader to translate strategy into work, the laddering is written and rated at the individual level.">
+        <div class="p-tag">02 · Meets / Doesn't Meet</div><h4>Move the Business Forward</h4>
+        <div class="p-detail"></div>
+      </div>
+      <div class="pillar" data-tag="03" data-title="Live Our Values" data-detail="Rated Meets / Doesn't Meet. Built from performance criteria chosen to reflect how colleagues are expected to demonstrate our values, desired behaviors, and cultural norms, and linked directly to core competencies for both leader and colleague. The piece ERG leaders pushed to keep central.">
+        <div class="p-tag">03 · Meets / Doesn't Meet</div><h4>Live Our Values</h4>
+        <div class="p-detail"></div>
+      </div>
+      <div class="pillar" data-tag="04" data-title="Lead the Business" data-detail="Rated Meets / Doesn't Meet. Applies only to people leaders, on leader-specific criteria: did they approve timecards on time, hold real career conversations with their direct reports, and move the numbers on their team's engagement survey scorecard. This pillar is backed by a management bootcamp leaders went through this year, built to push them toward being strategic people leaders, not just supervisors.">
+        <div class="p-tag">04 · Meets / Doesn't Meet</div><h4>Lead the Business</h4>
+        <div class="p-detail"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="dwg-label">DWG-05 · Working Model</div>
+    <h2>Try the framework</h2>
+    <p>Every pillar is a straight Meets / Doesn't Meet call, no 1 to 5 scale to inflate. Toggle a hypothetical colleague's standing on each pillar and watch the calibrated outcome update. Pillar 2 breaks into its 3 individual SMART goals, since that's where the real scoring happens.</p>
+    <div class="demo">
+      <div class="demo-grid">
+        <div>
+          <div class="toggle-row">
+            <div class="tr-text"><label>01 · Do the Job</label><div class="sub">Job description on screen while rating</div></div>
+            <div class="switch" data-state="meets" data-pillar="0" onclick="toggleSwitch(this)">
+              <div class="half no">No</div><div class="half meets">Meets</div>
+            </div>
+          </div>
+
+          <div class="pillar2-block">
+            <div class="tr-text"><label>02 · Move the Business Forward</label><div class="sub">3 SMART goals laddered to corporate priorities</div></div>
+            <div class="goal-row">
+              <div class="sub">Goal 1</div>
+              <div class="switch small" data-state="meets" data-goal="0" onclick="toggleGoal(this)"><div class="half no">No</div><div class="half meets">Meets</div></div>
+            </div>
+            <div class="goal-row">
+              <div class="sub">Goal 2</div>
+              <div class="switch small" data-state="meets" data-goal="1" onclick="toggleGoal(this)"><div class="half no">No</div><div class="half meets">Meets</div></div>
+            </div>
+            <div class="goal-row">
+              <div class="sub">Goal 3</div>
+              <div class="switch small" data-state="meets" data-goal="2" onclick="toggleGoal(this)"><div class="half no">No</div><div class="half meets">Meets</div></div>
+            </div>
+            <div class="sub" style="margin-top:8px; padding-left:14px; opacity:0.8;">Demo rule: all 3 goals must Meet for the pillar to Meet. Actual weighting is still being finalized and will vary by exempt / non-exempt level.</div>
+          </div>
+
+          <div class="toggle-row">
+            <div class="tr-text"><label>03 · Live Our Values</label><div class="sub">Core competencies, leader + colleague</div></div>
+            <div class="switch" data-state="meets" data-pillar="2" onclick="toggleSwitch(this)">
+              <div class="half no">No</div><div class="half meets">Meets</div>
+            </div>
+          </div>
+          <div class="toggle-row">
+            <div class="tr-text"><label>04 · Lead the Business</label><div class="sub">People leaders only: timecards, career conversations, team engagement</div></div>
+            <div class="switch" data-state="meets" data-pillar="3" onclick="toggleSwitch(this)">
+              <div class="half no">No</div><div class="half meets">Meets</div>
+            </div>
+          </div>
+        </div>
+        <div class="readout">
+          <div class="r-label">Calibrated Outcome</div>
+          <div class="r-score" id="score">4/4</div>
+          <div class="r-tag" id="tag">Meets expectations on every pillar, a real, differentiated Meet.</div>
+          <div class="r-old">Old flat-scale process: <span>would default to a 5</span>, no differentiation, regardless of these answers.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+  <section class="panel">
+    <div class="dwg-label">DWG-06 · Success Metrics</div>
+    <h2>What tells us it worked</h2>
+    <p>The architecture only matters if it changes behavior once it's live. Three signals will show whether it's working, without needing a target number to be meaningful on day one.</p>
+    <div class="pain-grid">
+      <div class="pain-card" style="border-left-color: var(--sage);"><div class="pc-num" style="color: var(--sage);">01</div><p><strong>Rating distribution.</strong> Do Meets and Doesn't Meet actually differentiate performance, or does the org drift back toward everyone clustering at the top?</p></div>
+      <div class="pain-card" style="border-left-color: var(--sage);"><div class="pc-num" style="color: var(--sage);">02</div><p><strong>SMART goal completion rate.</strong> Are colleagues consistently setting and completing goals that ladder to corporate priorities, or is Pillar 2 becoming a formality?</p></div>
+      <div class="pain-card" style="border-left-color: var(--sage);"><div class="pc-num" style="color: var(--sage);">03</div><p><strong>Manager confidence and calibration consistency.</strong> Do leaders rate similarly-performing colleagues similarly, and do they feel equipped to have the conversation, not just fill out the form?</p></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="dwg-label">DWG-07 · Sign-Off</div>
+    <h2>Where it stands</h2>
+    <p>The framework has been socialized end to end: HRBPs, SLT, ICs, and ERG leadership. It hasn't launched yet. It's staged as a 2027 initiative, timed to roll out alongside the corporate priorities it's built to measure against.</p>
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-num">OCT '26</div>
+        <div><h4>ELT buy-in and green light</h4><p>Final presentation to the ELT for sign-off before development starts.</p></div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">NEXT</div>
+        <div><h4>Development</h4><p>Build the framework into the PM software: pillar structure, SMART goal setting, competency linkage, and job description surfacing.</p></div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">THEN</div>
+        <div><h4>Testing</h4><p>Validate the framework and system build before it reaches leaders and colleagues org-wide.</p></div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">2027</div>
+        <div><h4>Launch</h4><p>Enterprise rollout, timed to the corporate priorities the framework is built to measure against.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div>Cassie Kesterholt <a href="https://linkedin.com/in/casskesterholt" target="_blank" rel="noopener">linkedin.com/in/casskesterholt</a></div>
+    <div>Performance Management Architecture, Design Case Study</div>
+  </footer>
+</div>
+
+<script>
+  const curves = {
+    before: [4, 4, 8, 20, 64],
+    after:  [4, 14, 38, 30, 14]
+  };
+  const notes = {
+    before: '"Shoot for a 3" drove completion, but managers rated nearly everyone a 5, so the scale stopped differentiating anyone.',
+    after: 'Target distribution once the four-pillar framework replaces the flat 1 to 5 scale, ratings spread across real performance levels instead of stacking at the top.'
+  };
+  const barsEl = document.getElementById('bars');
+  const barEls = [];
+  curves.before.forEach((v,i) => {
+    const col = document.createElement('div');
+    col.className = 'bar-col';
+    const bar = document.createElement('div');
+    bar.className = 'bar';
+    bar.style.height = v + '%';
+    col.appendChild(bar);
+    barsEl.appendChild(col);
+    barEls.push(bar);
+  });
+  function setCurve(which){
+    document.getElementById('btn-before').classList.toggle('active', which==='before');
+    document.getElementById('btn-after').classList.toggle('active', which==='after');
+    curves[which].forEach((v,i) => {
+      barEls[i].style.height = v + '%';
+      barEls[i].style.background = which === 'before' ? 'var(--rust)' : 'var(--sage)';
+    });
+    document.getElementById('bar-note').textContent = notes[which];
+  }
+
+  document.querySelectorAll('.pillar').forEach(p => {
+    p.addEventListener('click', () => {
+      const wasOpen = p.classList.contains('open');
+      document.querySelectorAll('.pillar').forEach(o => o.classList.remove('open'));
+      if(!wasOpen){
+        p.classList.add('open');
+        const detail = p.querySelector('.p-detail');
+        detail.textContent = p.dataset.detail;
+      }
+    });
+  });
+
+  // pillars[0]=Do the Job, pillars[1]=Move the Business Forward (rolled up from goals), pillars[2]=Live Our Values, pillars[3]=Lead the Business
+  const pillars = [1, 1, 1, 1];
+  const goals = [1, 1, 1];
+
+  function recalc(){
+    // Pillar 2 rolls up from its 3 SMART goals via strict AND logic: all 3 must Meet for the pillar to Meet.
+    // (Placeholder rule for this demo. The real weighting isn't finalized and will vary by exempt/non-exempt level.)
+    const goalsMet = goals.reduce((a,b)=>a+b, 0);
+    pillars[1] = goalsMet === 3 ? 1 : 0;
+
+    const metCount = pillars.reduce((a,b)=>a+b, 0);
+    document.getElementById('score').textContent = metCount + '/4';
+    const scoreEl = document.getElementById('score');
+    const tagEl = document.getElementById('tag');
+    if(metCount === 4){ scoreEl.style.color = 'var(--sage)'; tagEl.textContent = 'Meets expectations on every pillar, a real, differentiated Meet.'; }
+    else if(metCount === 3){ scoreEl.style.color = 'var(--amber)'; tagEl.textContent = 'Meets on 3 of 4 pillars, a specific, actionable gap instead of a blended average.'; }
+    else if(metCount >= 1){ scoreEl.style.color = 'var(--rust)'; tagEl.textContent = "Doesn't Meet on multiple pillars, a clear signal, not one buried in a \"3.\""; }
+    else { scoreEl.style.color = 'var(--rust)'; tagEl.textContent = "Doesn't Meet across the board, immediate, unambiguous signal."; }
+  }
+
+  function toggleSwitch(el){
+    const isMeets = el.dataset.state === 'meets';
+    el.dataset.state = isMeets ? 'no' : 'meets';
+    pillars[parseInt(el.dataset.pillar,10)] = isMeets ? 0 : 1;
+    recalc();
+  }
+
+  function toggleGoal(el){
+    const isMeets = el.dataset.state === 'meets';
+    el.dataset.state = isMeets ? 'no' : 'meets';
+    goals[parseInt(el.dataset.goal,10)] = isMeets ? 0 : 1;
+    recalc();
+  }
+</script>
+</body>
+</html>

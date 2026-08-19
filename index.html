@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cassie Kesterholt, Talent Development Portfolio</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #142a40;
+    --bg-panel: #1b3752;
+    --bg-panel-2: #204064;
+    --grid-line: rgba(232,228,217,0.06);
+    --grid-line-strong: rgba(232,228,217,0.14);
+    --paper: #eae5d6;
+    --paper-dim: #b9c3cd;
+    --amber: #e0a83d;
+    --rust: #d6684a;
+    --sage: #6fae8c;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+    --font-body: 'Inter', sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      repeating-linear-gradient(0deg, var(--grid-line) 0px, var(--grid-line) 1px, transparent 1px, transparent 32px),
+      repeating-linear-gradient(90deg, var(--grid-line) 0px, var(--grid-line) 1px, transparent 1px, transparent 32px),
+      var(--bg);
+    color: var(--paper);
+    font-family: var(--font-body);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  a{ color: var(--amber); }
+  .sheet{ max-width: 900px; margin: 0 auto; padding: 60px 28px 80px; }
+
+  .eyebrow{
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--amber); margin-bottom: 14px;
+  }
+  h1{
+    font-family: var(--font-display); font-weight: 700; font-size: clamp(30px, 5vw, 46px);
+    margin: 0 0 16px; letter-spacing: -0.01em; color: var(--paper);
+  }
+  .lede{ color: var(--paper-dim); font-size: 16px; max-width: 560px; margin: 0 0 8px; }
+  .name-link{
+    display:inline-flex; align-items:center; gap: 8px; margin-top: 18px;
+    font-family: var(--font-mono); font-size: 13px; color: var(--paper-dim); text-decoration: none;
+  }
+  .name-link a{ color: var(--amber); }
+
+  .divider{ height: 1px; background: var(--grid-line-strong); margin: 44px 0 36px; }
+
+  .dwg-label{
+    font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.1em; color: var(--amber);
+    text-transform: uppercase; margin-bottom: 22px; display:flex; align-items:center; gap: 10px;
+  }
+  .dwg-label::after{ content:""; flex:1; height:1px; background: var(--grid-line-strong); }
+
+  .cards{ display:flex; flex-direction:column; gap: 16px; }
+  .card{
+    display:block; text-decoration:none; color: inherit;
+    background: var(--bg-panel); border: 1px solid var(--grid-line-strong); border-left: 3px solid var(--amber);
+    padding: 24px 26px; transition: border-color 0.2s ease, background 0.2s ease, transform 0.15s ease;
+  }
+  .card:hover{ background: var(--bg-panel-2); border-left-color: var(--sage); transform: translateX(2px); }
+  .card .c-tag{
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; color: var(--amber);
+    text-transform: uppercase; margin-bottom: 8px;
+  }
+  .card h2{
+    font-family: var(--font-display); font-weight: 600; font-size: 21px; margin: 0 0 10px; color: var(--paper);
+  }
+  .card p{ margin: 0 0 14px; font-size: 14.5px; color: var(--paper-dim); }
+  .card .c-open{
+    font-family: var(--font-mono); font-size: 12px; color: var(--sage); letter-spacing: 0.04em;
+  }
+  .card .c-open::after{ content: " →"; }
+
+  footer{
+    margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--grid-line-strong);
+    font-family: var(--font-mono); font-size: 12px; color: var(--paper-dim);
+    display:flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <div class="eyebrow">Talent Development / Organizational Development Portfolio</div>
+  <h1>Cassie Kesterholt</h1>
+  <p class="lede">Director of Talent Development. Two case studies below, each with the real problem behind it and a working interactive demo of what was actually built.</p>
+  <div class="name-link">
+    <a href="https://linkedin.com/in/casskesterholt" target="_blank" rel="noopener">linkedin.com/in/casskesterholt</a>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="dwg-label">Case Studies</div>
+  <div class="cards">
+    <a class="card" href="pm-architecture.html">
+      <div class="c-tag">Performance Management, 2027 Initiative</div>
+      <h2>Performance Management Architecture</h2>
+      <p>Redesigning how performance gets defined and rated after three years of rating inflation and a full reset of enterprise priorities. Four pillars, a working calibration demo, and the philosophy statement that anchors it.</p>
+      <div class="c-open">Open case study</div>
+    </a>
+    <a class="card" href="9box-architecture.html">
+      <div class="c-tag">Talent Management, Live &amp; Iterating</div>
+      <h2>9-Box Talent Review Redesign</h2>
+      <p>Turning a PDF-based 9-box that couldn't be aggregated into a fixed-schema Excel model with an interactive matrix, an automatic Hi-Po flag, and a self-built Python script that rolls results up for the CHRO.</p>
+      <div class="c-open">Open case study</div>
+    </a>
+  </div>
+
+  <footer>
+    <div>Cassie Kesterholt</div>
+    <div>Built with Claude</div>
+  </footer>
+</div>
+</body>
+</html>
