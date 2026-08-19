@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Instructional Design: AI Fluency Course, Cassie Kesterholt</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #142a40;
+    --bg-panel: #1b3752;
+    --bg-panel-2: #204064;
+    --grid-line: rgba(232,228,217,0.06);
+    --grid-line-strong: rgba(232,228,217,0.14);
+    --paper: #eae5d6;
+    --paper-dim: #b9c3cd;
+    --amber: #e0a83d;
+    --rust: #d6684a;
+    --sage: #6fae8c;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+    --font-body: 'Inter', sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      repeating-linear-gradient(0deg, var(--grid-line) 0px, var(--grid-line) 1px, transparent 1px, transparent 32px),
+      repeating-linear-gradient(90deg, var(--grid-line) 0px, var(--grid-line) 1px, transparent 1px, transparent 32px),
+      var(--bg);
+    color: var(--paper);
+    font-family: var(--font-body);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  a{ color: var(--amber); }
+  .sheet{ max-width: 980px; margin: 0 auto; padding: 28px 28px 80px; }
+  .titleblock{ border: 1.5px solid var(--grid-line-strong); padding: 22px 24px; margin-bottom: 40px; position: relative; }
+  .titleblock::before, .titleblock::after{ content: ""; position: absolute; width: 10px; height: 10px; border: 1.5px solid var(--amber); }
+  .titleblock::before{ top: -6px; left: -6px; border-right: none; border-bottom: none; }
+  .titleblock::after{ bottom: -6px; right: -6px; border-left: none; border-top: none; }
+  .tb-eyebrow{ font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--amber); margin-bottom: 10px; }
+  h1{ font-family: var(--font-display); font-weight: 700; font-size: clamp(28px, 4.2vw, 42px); margin: 0 0 14px; letter-spacing: -0.01em; color: var(--paper); }
+  .tb-meta{ display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px 24px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--grid-line-strong); }
+  .tb-meta div{ font-family: var(--font-mono); font-size: 12px; color: var(--paper-dim); }
+  .tb-meta span{ display:block; color: var(--paper); font-size: 13px; margin-top: 2px; }
+  .tb-status{ display:inline-block; margin-top: 16px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--bg); background: var(--amber); padding: 5px 10px; }
+  .dwg-label{ font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.1em; color: var(--amber); text-transform: uppercase; margin-bottom: 8px; display:flex; align-items:center; gap: 10px; }
+  .dwg-label::after{ content:""; flex:1; height:1px; background: var(--grid-line-strong); }
+  section.panel{ margin-bottom: 56px; }
+  h2{ font-family: var(--font-display); font-weight: 600; font-size: clamp(20px, 3vw, 26px); margin: 0 0 14px; color: var(--paper); }
+  p{ color: var(--paper-dim); margin: 0 0 14px; font-size: 15px; }
+  p.lede{ color: var(--paper); font-size: 16px; }
+  strong{ color: var(--paper); font-weight: 600; }
+
+  .pain-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin: 20px 0; }
+  .pain-card{ background: var(--bg-panel); border: 1px solid var(--grid-line-strong); border-left: 3px solid var(--amber); padding: 16px 18px; }
+  .pain-card .pc-num{ font-family: var(--font-mono); font-size: 11px; color: var(--amber); letter-spacing: 0.08em; }
+  .pain-card p{ margin: 8px 0 0; font-size: 14px; color: var(--paper); }
+
+  .flow{ display:flex; flex-direction:column; gap: 0; margin: 20px 0; }
+  .flow-step{ display:grid; grid-template-columns: 90px 1fr; gap: 16px; padding: 14px 0; border-top: 1px solid var(--grid-line-strong); }
+  .flow-step:last-child{ border-bottom: 1px solid var(--grid-line-strong); }
+  .flow-num{ font-family: var(--font-mono); font-size: 12px; color: var(--amber); padding-top: 2px; }
+  .flow-step h4{ font-family: var(--font-display); font-size: 15px; margin: 0 0 4px; color: var(--paper); }
+  .flow-step p{ margin:0; font-size: 13.5px; }
+
+  .pillars{ display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin: 20px 0; }
+  .pillar{ background: var(--bg-panel); border: 1px solid var(--grid-line-strong); padding: 18px; cursor: pointer; transition: border-color 0.25s ease, background 0.25s ease; }
+  .pillar:hover{ border-color: var(--amber); }
+  .pillar.open{ background: var(--bg-panel-2); border-color: var(--amber); }
+  .pillar .p-tag{ font-family: var(--font-mono); font-size: 10.5px; color: var(--amber); letter-spacing: 0.08em; }
+  .pillar h4{ font-family: var(--font-display); font-size: 16px; margin: 8px 0 0; color: var(--paper); }
+  .pillar .p-sub{ font-family: var(--font-mono); font-size: 11.5px; color: var(--paper-dim); margin-top: 4px; }
+  .pillar .p-detail{ display:none; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--grid-line); }
+  .pillar.open .p-detail{ display:block; }
+  .agenda-item{ display:flex; gap: 10px; font-size: 13px; color: var(--paper-dim); margin-bottom: 8px; }
+  .agenda-item .a-time{ font-family: var(--font-mono); font-size: 11px; color: var(--sage); flex-shrink:0; width: 56px; }
+
+  .widget{ background: var(--bg-panel); border: 1px solid var(--grid-line-strong); padding: 22px 24px 26px; margin: 20px 0 10px; }
+  .bars{ display:flex; align-items:flex-end; gap: 30px; height: 160px; padding: 0 20px; border-bottom: 1px solid var(--grid-line-strong); }
+  .bar-col{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; max-width: 140px; }
+  .bar{ width: 100%; max-width: 90px; background: var(--sage); position: relative; }
+  .bar .bar-val{ position:absolute; top:-24px; left:0; right:0; text-align:center; font-family: var(--font-mono); font-size: 15px; color: var(--paper); }
+  .bar-labels{ display:flex; gap: 30px; padding: 0 20px; margin-top: 10px; }
+  .bar-labels div{ flex:1; max-width: 140px; text-align:center; font-family: var(--font-mono); font-size: 11px; color: var(--paper-dim); }
+
+  .metric-row{ display:flex; gap: 20px; flex-wrap: wrap; margin: 20px 0; }
+  .metric{ flex:1; min-width: 160px; background: var(--bg-panel); border: 1px solid var(--grid-line-strong); padding: 18px; text-align:center; }
+  .metric .m-num{ font-family: var(--font-display); font-size: 28px; font-weight: 700; color: var(--sage); }
+  .metric .m-label{ font-family: var(--font-mono); font-size: 11px; color: var(--paper-dim); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 6px; }
+
+  footer{ margin-top: 60px; padding-top: 20px; border-top: 1px solid var(--grid-line-strong); font-family: var(--font-mono); font-size: 12px; color: var(--paper-dim); display:flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <div class="titleblock">
+    <div class="tb-eyebrow">Instructional Design, Case Study</div>
+    <h1>Instructional Design: AI Fluency Course</h1>
+    <p class="lede">Scoping, designing, and delivering an in-house AI fluency curriculum using ADDIE, from an enterprise-wide survey through two recurring vILT sessions with real participation growth.</p>
+    <div class="tb-status">Live, recurring lunch &amp; learns</div>
+    <div class="tb-meta">
+      <div>Drawn by<span><a href="https://linkedin.com/in/casskesterholt" target="_blank" rel="noopener" style="color: inherit; text-decoration: underline;">Cassie Kesterholt</a></span></div>
+      <div>Methodology<span>ADDIE</span></div>
+      <div>Format<span>vILT, 1.5 hrs each</span></div>
+      <div>Status<span>Live, growing</span></div>
+    </div>
+  </div>
+
+  <section class="panel">
+    <div class="dwg-label">DWG-01 · Analyze</div>
+    <h2>Started with a survey, not an assumption</h2>
+    <p>Rather than guessing what professional development the organization needed, the team surveyed the enterprise at the start of the year to scope out course topics directly from colleagues.</p>
+    <div class="pain-grid">
+      <div class="pain-card"><div class="pc-num">RESULT</div><p><strong>75% of respondents</strong> said they wanted to increase their awareness of AI technologies, more than any other topic surfaced in the survey. That result is what scoped this course into existence.</p></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="dwg-label">DWG-02 · Design &amp; Develop</div>
+    <h2>From a skill gap to a delivery model</h2>
+    <p>With the gap identified, the design had to answer two questions: what business outcome should this actually move, and what format would colleagues realistically show up for.</p>
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-num">DESIGN</div>
+        <div><h4>Anchor to business impact</h4><p>The curriculum was built around four outcomes: increased productivity across teams, enhanced decision making and accuracy, cost savings through efficiency, and accelerated innovation and competitive advantage. Every module had to trace back to one of these, not just teach a tool for its own sake.</p></div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">DEVELOP</div>
+        <div><h4>Land on a repeatable format</h4><p>The team landed on two vILT (virtual instructor-led training) sessions, each 1.5 hours, repeated throughout the year as a recurring lunch and learn series rather than a one-time launch.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="dwg-label">DWG-03 · The Curriculum</div>
+    <h2>Two sessions, building on each other</h2>
+    <p>Click a session to see a high-level agenda. These are illustrative example agendas built around the real session titles and business impact goals, worth checking against the actual delivered content before this goes out.</p>
+    <div class="pillars" id="pillars">
+      <div class="pillar" data-session="0">
+        <div class="p-tag">Session 01 · 1.5 hrs</div>
+        <h4>Using AI to Increase Productivity</h4>
+        <div class="p-sub">Foundational session, click to expand agenda</div>
+        <div class="p-detail" id="detail-0"></div>
+      </div>
+      <div class="pillar" data-session="1">
+        <div class="p-tag">Session 02 · 1.5 hrs</div>
+        <h4>AI Unlocked: Innovate, Integrate, Elevate</h4>
+        <div class="p-sub">Builds on Session 01, click to expand agenda</div>
+        <div class="p-detail" id="detail-1"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="dwg-label">DWG-04 · Implement</div>
+    <h2>Delivered as a recurring series, not a one-off</h2>
+    <p>Both sessions run repeatedly throughout the year as part of an ongoing lunch and learn series, rather than a single launch event. That format let colleagues opt in on their own timeline instead of requiring one mandatory rollout.</p>
+  </section>
+
+  <section class="panel">
+    <div class="dwg-label">DWG-05 · Evaluate</div>
+    <h2>Participation grew from Session 1 to Session 2</h2>
+    <div class="widget">
+      <div class="bars">
+        <div class="bar-col"><div class="bar" style="height: 68%;"><div class="bar-val">132</div></div></div>
+        <div class="bar-col"><div class="bar" style="height: 80%; background: var(--amber);"><div class="bar-val">156</div></div></div>
+      </div>
+      <div class="bar-labels">
+        <div>Session 01 (2 vILTs)</div>
+        <div>Session 02 (2 vILTs)</div>
+      </div>
+    </div>
+    <div class="metric-row">
+      <div class="metric"><div class="m-num">288</div><div class="m-label">Total colleagues trained</div></div>
+      <div class="metric"><div class="m-num">+18%</div><div class="m-label">Growth, Session 1 to Session 2</div></div>
+      <div class="metric"><div class="m-num">4</div><div class="m-label">Total vILT deliveries so far</div></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="dwg-label">DWG-06 · Sign-Off</div>
+    <h2>Where it stands</h2>
+    <p>Both sessions continue to run as part of the ongoing lunch and learn series, with participation trending upward as awareness of the offering spreads across the organization.</p>
+  </section>
+
+  <footer>
+    <div>Cassie Kesterholt <a href="https://linkedin.com/in/casskesterholt" target="_blank" rel="noopener">linkedin.com/in/casskesterholt</a></div>
+    <div>Instructional Design, AI Fluency Course Case Study</div>
+  </footer>
+</div>
+
+<script>
+  const agendas = [
+    [
+      { time: "0:00", item: "Welcome and why AI fluency matters here, framed around productivity, not novelty" },
+      { time: "0:15", item: "Live walkthrough: everyday tasks AI tools can take off your plate today" },
+      { time: "0:45", item: "Hands-on practice with real, low-risk work scenarios" },
+      { time: "1:15", item: "Common mistakes and guardrails, what not to hand off to AI" },
+      { time: "1:25", item: "Close: one thing to try this week" }
+    ],
+    [
+      { time: "0:00", item: "Recap: where AI fits into daily productivity, building on Session 1" },
+      { time: "0:15", item: "Innovate: using AI to explore ideas and options faster, not just execute tasks" },
+      { time: "0:40", item: "Integrate: weaving AI into an existing workflow rather than a separate step" },
+      { time: "1:05", item: "Elevate: moving from individual use to team- and process-level impact" },
+      { time: "1:25", item: "Close: identifying one workflow to redesign with AI" }
+    ]
+  ];
+
+  document.querySelectorAll('.pillar').forEach(p => {
+    p.addEventListener('click', () => {
+      const idx = p.dataset.session;
+      const wasOpen = p.classList.contains('open');
+      document.querySelectorAll('.pillar').forEach(o => o.classList.remove('open'));
+      if(!wasOpen){
+        p.classList.add('open');
+        const detail = document.getElementById('detail-' + idx);
+        detail.innerHTML = '';
+        agendas[idx].forEach(row => {
+          const div = document.createElement('div');
+          div.className = 'agenda-item';
+          div.innerHTML = '<div class="a-time">' + row.time + '</div><div>' + row.item + '</div>';
+          detail.appendChild(div);
+        });
+      }
+    });
+  });
+</script>
+</body>
+</html>
