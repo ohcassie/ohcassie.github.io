@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Built With Claude, Cassie Kesterholt</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #142a40;
+    --bg-panel: #1b3752;
+    --bg-panel-2: #204064;
+    --grid-line: rgba(232,228,217,0.06);
+    --grid-line-strong: rgba(232,228,217,0.14);
+    --paper: #eae5d6;
+    --paper-dim: #b9c3cd;
+    --amber: #e0a83d;
+    --rust: #d6684a;
+    --sage: #6fae8c;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+    --font-body: 'Inter', sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      repeating-linear-gradient(0deg, var(--grid-line) 0px, var(--grid-line) 1px, transparent 1px, transparent 32px),
+      repeating-linear-gradient(90deg, var(--grid-line) 0px, var(--grid-line) 1px, transparent 1px, transparent 32px),
+      var(--bg);
+    color: var(--paper);
+    font-family: var(--font-body);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  a{ color: var(--amber); }
+  .sheet{ max-width: 980px; margin: 0 auto; padding: 28px 28px 80px; }
+  .titleblock{ border: 1.5px solid var(--grid-line-strong); padding: 22px 24px; margin-bottom: 40px; position: relative; }
+  .titleblock::before, .titleblock::after{ content: ""; position: absolute; width: 10px; height: 10px; border: 1.5px solid var(--amber); }
+  .titleblock::before{ top: -6px; left: -6px; border-right: none; border-bottom: none; }
+  .titleblock::after{ bottom: -6px; right: -6px; border-left: none; border-top: none; }
+  .tb-eyebrow{ font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--amber); margin-bottom: 10px; }
+  h1{ font-family: var(--font-display); font-weight: 700; font-size: clamp(28px, 4.2vw, 42px); margin: 0 0 14px; letter-spacing: -0.01em; color: var(--paper); }
+  .tb-meta{ display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px 24px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--grid-line-strong); }
+  .tb-meta div{ font-family: var(--font-mono); font-size: 12px; color: var(--paper-dim); }
+  .tb-meta span{ display:block; color: var(--paper); font-size: 13px; margin-top: 2px; }
+  .tb-status{ display:inline-block; margin-top: 16px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--bg); background: var(--amber); padding: 5px 10px; }
+  .dwg-label{ font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.1em; color: var(--amber); text-transform: uppercase; margin-bottom: 8px; display:flex; align-items:center; gap: 10px; }
+  .dwg-label::after{ content:""; flex:1; height:1px; background: var(--grid-line-strong); }
+  section.panel{ margin-bottom: 56px; }
+  h2{ font-family: var(--font-display); font-weight: 600; font-size: clamp(20px, 3vw, 26px); margin: 0 0 14px; color: var(--paper); }
+  p{ color: var(--paper-dim); margin: 0 0 14px; font-size: 15px; }
+  p.lede{ color: var(--paper); font-size: 16px; }
+  strong{ color: var(--paper); font-weight: 600; }
+
+  .flow{ display:flex; flex-direction:column; gap: 0; margin: 20px 0; }
+  .flow-step{ display:grid; grid-template-columns: 34px 1fr; gap: 16px; padding: 14px 0; border-top: 1px solid var(--grid-line-strong); }
+  .flow-step:last-child{ border-bottom: 1px solid var(--grid-line-strong); }
+  .flow-num{ font-family: var(--font-mono); font-size: 12px; color: var(--amber); padding-top: 2px; }
+  .flow-step h4{ font-family: var(--font-display); font-size: 15px; margin: 0 0 4px; color: var(--paper); }
+  .flow-step p{ margin:0; font-size: 13.5px; }
+
+  .metric-row{ display:flex; gap: 20px; flex-wrap: wrap; margin: 20px 0; }
+  .metric{ flex:1; min-width: 150px; background: var(--bg-panel); border: 1px solid var(--grid-line-strong); padding: 20px; text-align:center; }
+  .metric .m-num{ font-family: var(--font-display); font-size: 30px; font-weight: 700; color: var(--sage); }
+  .metric .m-label{ font-family: var(--font-mono); font-size: 11px; color: var(--paper-dim); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 6px; }
+
+  .prompt-cards{ display:flex; flex-direction:column; gap: 12px; margin: 20px 0; }
+  .prompt-card{ background: var(--bg-panel); border: 1px solid var(--grid-line-strong); border-left: 3px solid var(--amber); padding: 16px 20px; cursor: pointer; }
+  .prompt-card:hover{ border-left-color: var(--sage); }
+  .prompt-card.open{ background: var(--bg-panel-2); }
+  .pc-ask{ font-family: var(--font-display); font-size: 15.5px; font-style: italic; color: var(--paper); }
+  .pc-ask::before{ content: '\201C'; } .pc-ask::after{ content: '\201D'; }
+  .pc-shipped{ display:none; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--grid-line); font-size: 13.5px; color: var(--paper-dim); }
+  .prompt-card.open .pc-shipped{ display:block; }
+  .pc-shipped a{ color: var(--amber); }
+
+  footer{ margin-top: 60px; padding-top: 20px; border-top: 1px solid var(--grid-line-strong); font-family: var(--font-mono); font-size: 12px; color: var(--paper-dim); display:flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <div class="titleblock">
+    <div class="tb-eyebrow">AI Enablement, Meta Case Study</div>
+    <h1>Built With Claude</h1>
+    <p class="lede">Every case study on this site, this one included, was designed and built by an HR director working directly with Claude. No engineering team, no IT backlog, no ticket to wait behind.</p>
+    <div class="tb-status">Live, this entire site</div>
+    <div class="tb-meta">
+      <div>Drawn by<span><a href="https://linkedin.com/in/casskesterholt" target="_blank" rel="noopener" style="color: inherit; text-decoration: underline;">Cassie Kesterholt</a></span></div>
+      <div>Built in<span>Claude Code</span></div>
+      <div>Stack<span>Plain HTML, CSS, JS</span></div>
+      <div>Status<span>Ongoing, grows with each real problem</span></div>
+    </div>
+  </div>
+
+  <section class="panel">
+    <div class="dwg-label">DWG-01 · Site Survey</div>
+    <h2>The idea was never the bottleneck. Building it was.</h2>
+    <p>HR leaders are usually good at spotting the actual problem: the process that's quietly broken, the review that inflates every rating, the onboarding experience that depends on luck. What's rare is the ability to go from that diagnosis to a working, testable thing without handing it to someone else and waiting.</p>
+    <p>That gap is normally where good ideas go to die, not because they're wrong, but because they sit in a backlog behind work that has an engineer already assigned to it. Every page on this site, including this one, exists because that gap closed. The problem got described in plain language, in a conversation, and came out the other side as a real, working page the same day.</p>
+  </section>
+
+  <section class="panel">
+    <div class="dwg-label">DWG-02 · Structural Plan</div>
+    <h2>How each case study actually gets built</h2>
+    <p>The same four steps, every time, whether it's a rating framework or an AI agent.</p>
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-num">01</div>
+        <div><h4>Bring the real problem, not a spec</h4><p>Describe the actual pain point the way you'd explain it to a peer over coffee, not as a formal set of requirements. The messiness is useful information.</p></div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">02</div>
+        <div><h4>Work through the structure together</h4><p>Claude proposes a framework or a set of pillars; it gets pushed back on, reshaped, and refined in conversation until it actually reflects the real tradeoffs.</p></div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">03</div>
+        <div><h4>Get a working demo, not a mockup</h4><p>Every interactive piece on this site, click-to-expand pillars, sample conversations, the reasoning trace, is real, functioning code, not a static image of what it might look like.</p></div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">04</div>
+        <div><h4>Test it like a real feature</h4><p>Open it in an actual browser, click through every interaction, fix what's broken, then ship it. Nothing goes live untested, even on a portfolio site.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="dwg-label">DWG-03 · Working Model</div>
+    <h2>The ask, and what actually shipped</h2>
+    <p>These are the real starting prompts behind every page on this site, paraphrased close to how they were actually asked. Click one to see what came out the other end.</p>
+    <div class="prompt-cards" id="prompt-cards"></div>
+  </section>
+
+  <section class="panel">
+    <div class="dwg-label">DWG-04 · Results</div>
+    <h2>What that adds up to</h2>
+    <div class="metric-row">
+      <div class="metric"><div class="m-num">6</div><div class="m-label">Case studies live</div></div>
+      <div class="metric"><div class="m-num">0</div><div class="m-label">Frameworks or dependencies</div></div>
+      <div class="metric"><div class="m-num">0</div><div class="m-label">Engineers on the backlog</div></div>
+      <div class="metric"><div class="m-num">1</div><div class="m-label">Sitting</div></div>
+    </div>
+    <p>That last one isn't a typo. The Responsible AI framework and this page were both asked for and shipped in the same sitting as the conversation that raised the question of what was still missing.</p>
+  </section>
+
+  <section class="panel">
+    <div class="dwg-label">DWG-05 · Sign-Off</div>
+    <h2>Where it stands</h2>
+    <p>This library keeps growing every time a real HR problem shows up worth building for. The point was never to prove AI can write HTML. It's that an HR leader fluent enough with these tools can go from "here's what's broken" to a working, reviewable artifact without waiting on anyone else's roadmap.</p>
+  </section>
+
+  <footer>
+    <div>Cassie Kesterholt <a href="https://linkedin.com/in/casskesterholt" target="_blank" rel="noopener">linkedin.com/in/casskesterholt</a></div>
+    <div>Built With Claude, Meta Case Study</div>
+  </footer>
+</div>
+
+<script>
+  const asks = [
+    { ask: "Let's redesign performance management from scratch.", shipped: 'A four-pillar architecture replacing a flat 1-5 scale, a working rating calibration demo, and the philosophy statement anchoring it. Socialized enterprise-wide, staged as a 2027 initiative. See <a href="pm-architecture.html">Performance Management Architecture</a>.' },
+    { ask: "We need a 9-box that isn't a PDF.", shipped: 'A fixed-schema Excel model, an interactive 9-box matrix, an automatic Hi-Po flag, and a self-built Python script that rolls results up for the CHRO. Live and iterating. See <a href="9box-architecture.html">9-Box Talent Review Redesign</a>.' },
+    { ask: "Help the people team show what AI can actually do.", shipped: 'Three narrow, purpose-built Copilot Studio bots instead of one broad, vague one. Live, 82% adoption across 1,650+ colleagues. See <a href="ai-chatbots.html">Three Copilot Studio Chatbots</a>.' },
+    { ask: "Scope and build an AI fluency course for the org.", shipped: 'An ADDIE-based curriculum built from an enterprise-wide survey, with recurring virtual instructor-led sessions and growing participation. See <a href="id-course.html">Instructional Design: AI Fluency Course</a>.' },
+    { ask: "Let's build an HR onboarding agent for new hires.", shipped: 'A four-pillar agent design, a sample-conversation demo, a clickable 90-day journey, and a live multi-step reasoning trace showing it check, act, and escalate. In design, piloting. See <a href="hr-onboarding-agent.html">HR Onboarding Agent</a>.' },
+    { ask: "As a CHRO, what am I missing, and what do I need to build next?", shipped: 'A three-tier Responsible AI decision-rights framework, applied retroactively to every AI tool already live, plus this page. Both shipped in the same sitting the question was asked. See <a href="responsible-ai-hr.html">Responsible AI in HR</a>.' }
+  ];
+
+  const cardsEl = document.getElementById('prompt-cards');
+  asks.forEach(a => {
+    const card = document.createElement('div');
+    card.className = 'prompt-card';
+    card.innerHTML = '<div class="pc-ask">' + a.ask + '</div><div class="pc-shipped">' + a.shipped + '</div>';
+    card.addEventListener('click', (e) => {
+      if(e.target.tagName === 'A') return;
+      card.classList.toggle('open');
+    });
+    cardsEl.appendChild(card);
+  });
+</script>
+</body>
+</html>
