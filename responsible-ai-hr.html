@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Responsible AI in HR, Cassie Kesterholt</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #142a40;
+    --bg-panel: #1b3752;
+    --bg-panel-2: #204064;
+    --grid-line: rgba(232,228,217,0.06);
+    --grid-line-strong: rgba(232,228,217,0.14);
+    --paper: #eae5d6;
+    --paper-dim: #b9c3cd;
+    --amber: #e0a83d;
+    --rust: #d6684a;
+    --sage: #6fae8c;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+    --font-body: 'Inter', sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      repeating-linear-gradient(0deg, var(--grid-line) 0px, var(--grid-line) 1px, transparent 1px, transparent 32px),
+      repeating-linear-gradient(90deg, var(--grid-line) 0px, var(--grid-line) 1px, transparent 1px, transparent 32px),
+      var(--bg);
+    color: var(--paper);
+    font-family: var(--font-body);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  a{ color: var(--amber); }
+  .sheet{ max-width: 980px; margin: 0 auto; padding: 28px 28px 80px; }
+  .titleblock{ border: 1.5px solid var(--grid-line-strong); padding: 22px 24px; margin-bottom: 40px; position: relative; }
+  .titleblock::before, .titleblock::after{ content: ""; position: absolute; width: 10px; height: 10px; border: 1.5px solid var(--amber); }
+  .titleblock::before{ top: -6px; left: -6px; border-right: none; border-bottom: none; }
+  .titleblock::after{ bottom: -6px; right: -6px; border-left: none; border-top: none; }
+  .tb-eyebrow{ font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--amber); margin-bottom: 10px; }
+  h1{ font-family: var(--font-display); font-weight: 700; font-size: clamp(28px, 4.2vw, 42px); margin: 0 0 14px; letter-spacing: -0.01em; color: var(--paper); }
+  .tb-meta{ display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px 24px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--grid-line-strong); }
+  .tb-meta div{ font-family: var(--font-mono); font-size: 12px; color: var(--paper-dim); }
+  .tb-meta span{ display:block; color: var(--paper); font-size: 13px; margin-top: 2px; }
+  .tb-status{ display:inline-block; margin-top: 16px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--bg); background: var(--amber); padding: 5px 10px; }
+  .dwg-label{ font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.1em; color: var(--amber); text-transform: uppercase; margin-bottom: 8px; display:flex; align-items:center; gap: 10px; }
+  .dwg-label::after{ content:""; flex:1; height:1px; background: var(--grid-line-strong); }
+  section.panel{ margin-bottom: 56px; }
+  h2{ font-family: var(--font-display); font-weight: 600; font-size: clamp(20px, 3vw, 26px); margin: 0 0 14px; color: var(--paper); }
+  p{ color: var(--paper-dim); margin: 0 0 14px; font-size: 15px; }
+  p.lede{ color: var(--paper); font-size: 16px; }
+  strong{ color: var(--paper); font-weight: 600; }
+
+  .pain-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin: 20px 0; }
+  .pain-card{ background: var(--bg-panel); border: 1px solid var(--grid-line-strong); border-left: 3px solid var(--rust); padding: 16px 18px; }
+  .pain-card.sage{ border-left-color: var(--sage); }
+  .pain-card .pc-num{ font-family: var(--font-mono); font-size: 11px; color: var(--rust); letter-spacing: 0.08em; }
+  .pain-card.sage .pc-num{ color: var(--sage); }
+  .pain-card p{ margin: 8px 0 0; font-size: 14px; color: var(--paper); }
+
+  .widget{ background: var(--bg-panel); border: 1px solid var(--grid-line-strong); padding: 22px 24px 26px; margin: 20px 0 10px; }
+  .widget-head{ display:flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 10px; margin-bottom: 18px; }
+  .widget-head h3{ font-family: var(--font-display); font-size: 17px; margin: 0; color: var(--paper); }
+
+  .pillars{ display:grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; margin: 20px 0; }
+  .pillar{ background: var(--bg-panel); border: 1px solid var(--grid-line-strong); border-top: 3px solid var(--grid-line-strong); padding: 18px; cursor: pointer; transition: border-color 0.25s ease, background 0.25s ease; }
+  .pillar:hover{ border-color: var(--amber); }
+  .pillar.open{ background: var(--bg-panel-2); border-color: var(--amber); }
+  .pillar .p-tag{ font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.08em; }
+  .pillar h4{ font-family: var(--font-display); font-size: 16px; margin: 8px 0 0; color: var(--paper); }
+  .pillar .p-detail{ display:none; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--grid-line); font-size: 13px; color: var(--paper-dim); }
+  .pillar.open .p-detail{ display:block; }
+
+  .chips{ display:flex; flex-wrap:wrap; gap: 8px; margin-top: 4px; }
+  .chip{
+    font-family: var(--font-body); font-size: 12.5px; padding: 7px 12px; border: 1px solid var(--grid-line-strong);
+    background: var(--bg-panel-2); color: var(--paper-dim); cursor: pointer; transition: border-color 0.2s ease, color 0.2s ease;
+  }
+  .chip:hover{ border-color: var(--amber); color: var(--paper); }
+  .chip.active{ border-color: var(--amber); color: var(--paper); background: var(--bg-panel); }
+
+  .verdict{ background: var(--bg); border: 1px solid var(--grid-line-strong); padding: 18px 20px; margin-top: 18px; }
+  .verdict-empty{ color: var(--paper-dim); font-family: var(--font-mono); font-size: 12.5px; }
+  .tier-badge{ display:inline-block; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; padding: 5px 10px; margin-bottom: 12px; color: var(--bg); }
+  .tier-badge.t1{ background: var(--sage); }
+  .tier-badge.t2{ background: var(--amber); }
+  .tier-badge.t3{ background: var(--rust); }
+  .verdict-text{ color: var(--paper); font-size: 14.5px; margin: 0; }
+
+  .flow{ display:flex; flex-direction:column; gap: 0; margin: 20px 0; }
+  .flow-step{ display:grid; grid-template-columns: 34px 1fr; gap: 16px; padding: 14px 0; border-top: 1px solid var(--grid-line-strong); }
+  .flow-step:last-child{ border-bottom: 1px solid var(--grid-line-strong); }
+  .flow-num{ font-family: var(--font-mono); font-size: 12px; color: var(--amber); padding-top: 2px; }
+  .flow-step h4{ font-family: var(--font-display); font-size: 15px; margin: 0 0 4px; color: var(--paper); }
+  .flow-step p{ margin:0; font-size: 13.5px; }
+
+  .map-table{ width:100%; border-collapse: collapse; margin: 18px 0; font-size: 13.5px; }
+  .map-table th{ text-align:left; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--paper-dim); padding: 8px 10px; border-bottom: 1px solid var(--grid-line-strong); }
+  .map-table td{ padding: 12px 10px; border-bottom: 1px solid var(--grid-line); color: var(--paper); vertical-align: top; }
+  .map-table td a{ color: var(--amber); }
+  .map-table .mini-badge{ display:inline-block; font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 8px; color: var(--bg); white-space: nowrap; }
+  .mini-badge.t1{ background: var(--sage); }
+  .mini-badge.t2{ background: var(--amber); }
+
+  footer{ margin-top: 60px; padding-top: 20px; border-top: 1px solid var(--grid-line-strong); font-family: var(--font-mono); font-size: 12px; color: var(--paper-dim); display:flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <div class="titleblock">
+    <div class="tb-eyebrow">AI Governance, Framework</div>
+    <h1>Responsible AI in HR</h1>
+    <p class="lede">A decision-rights framework for where an AI agent can act on its own, where it can only recommend, and where a person has to decide, applied before any people-facing AI tool scales past a pilot.</p>
+    <div class="tb-status">Adopted, applied to every AI tool on this site</div>
+    <div class="tb-meta">
+      <div>Drawn by<span><a href="https://linkedin.com/in/casskesterholt" target="_blank" rel="noopener" style="color: inherit; text-decoration: underline;">Cassie Kesterholt</a></span></div>
+      <div>Scope<span>Every AI tool touching people data</span></div>
+      <div>Applies to<span>Chatbots, Onboarding Agent, next builds</span></div>
+      <div>Status<span>Active internal standard</span></div>
+    </div>
+  </div>
+
+  <section class="panel">
+    <div class="dwg-label">DWG-01 · Site Survey</div>
+    <h2>Speed without a standard is how AI gets HR in trouble</h2>
+    <p>None of the AI work on this site happened because there was nothing to worry about. It happened because usefulness and risk were being weighed deliberately, use case by use case, before anything shipped. But that judgment call was living entirely in one person's head. It needed to be a written standard instead, one that says the same thing regardless of who's asking or how confident the tool sounds.</p>
+    <p>HR sits on some of the most consequential and most protected data in the company: pay, performance, medical accommodations, terminations. An agent that's genuinely useful for answering a PTO question is the same category of tool someone might be tempted to point at a promotion decision. The framework exists to draw that line before it gets crossed by accident.</p>
+    <div class="pain-grid">
+      <div class="pain-card"><div class="pc-num">01</div><p>AI tools were shipping faster than there was a shared, written answer to "what should this thing never decide on its own."</p></div>
+      <div class="pain-card"><div class="pc-num">02</div><p>Human-in-the-loop expectations varied by tool and by builder instinct, not by a consistent standard applied the same way every time.</p></div>
+      <div class="pain-card"><div class="pc-num">03</div><p>HR data reflects real historical inequities. An agent used carelessly, especially in screening or ranking, can quietly reproduce them at scale.</p></div>
+      <div class="pain-card"><div class="pc-num">04</div><p>Without a record of what the agent saw, recommended, or did versus what a person ultimately decided, a contested call had nothing to point back to.</p></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="dwg-label">DWG-02 · Structural Plan</div>
+    <h2>Three tiers, one rule underneath all of them</h2>
+    <p>Every AI use case in HR gets sorted into exactly one of three tiers before it's built, not after. The test is simple: how reversible is this, and whose life does it change if the agent gets it wrong. Click a tier to open it.</p>
+    <div class="pillars" id="pillars">
+      <div class="pillar" style="border-top-color: var(--sage);" data-detail="Low-stakes, reversible, informational. Worst case is a wrong or unnecessary message, not a life-altering outcome. Examples: answering a policy question, sending a scheduling reminder, flagging a missed milestone. The agent acts, then a person can still review the log after the fact.">
+        <div class="p-tag" style="color: var(--sage);">Tier 01 · Sage</div><h4>Autonomous</h4>
+        <div class="p-detail"></div>
+      </div>
+      <div class="pillar" style="border-top-color: var(--amber);" data-detail="The agent can prepare, draft, or suggest, but nothing takes effect until a person reviews and approves it. Examples: drafting PIP talking points, suggesting a first-pass performance rating. The output is a starting point for a human decision, never the decision itself.">
+        <div class="p-tag" style="color: var(--amber);">Tier 02 · Amber</div><h4>Recommend, Human Approves</h4>
+        <div class="p-detail"></div>
+      </div>
+      <div class="pillar" style="border-top-color: var(--rust);" data-detail="Career-altering, legally sensitive, or historically prone to bias. The agent may research and surface information, but it never drafts the outcome and never delivers it. Examples: promotion decisions, compensation changes, resume screening, termination. A person makes the call and has the conversation, full stop.">
+        <div class="p-tag" style="color: var(--rust);">Tier 03 · Rust</div><h4>Human Only</h4>
+        <div class="p-detail"></div>
+      </div>
+      <div class="pillar" style="border-top-color: var(--paper-dim);" data-detail="Regardless of tier, every interaction leaves a record: what the agent saw, what it recommended or did, and what a person ultimately decided. If a decision is ever questioned later, there needs to be a trail to review, not just a memory of what probably happened.">
+        <div class="p-tag" style="color: var(--paper-dim);">Cross-Cutting</div><h4>Always Logged</h4>
+        <div class="p-detail"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="dwg-label">DWG-03 · Working Model</div>
+    <h2>Classify a use case</h2>
+    <p>Pick a real HR scenario and see which tier it lands in, and why. This is the same test applied to every AI tool on this site before it shipped.</p>
+    <div class="widget">
+      <div class="chips" id="scenario-chips"></div>
+      <div class="verdict" id="verdict">
+        <div class="verdict-empty">Pick a scenario above to see how it's classified.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="dwg-label">DWG-04 · Applied</div>
+    <h2>Not theoretical. Already applied to what's live.</h2>
+    <p>The framework isn't a slide that lives separately from the work. Here's how it maps onto the AI tools already built.</p>
+    <div style="overflow-x:auto;">
+      <table class="map-table">
+        <tr><th>Tool</th><th>Behavior</th><th>Tier</th></tr>
+        <tr><td><a href="ai-chatbots.html">Development / IDP Bot</a></td><td>Answers career development questions directly</td><td><span class="mini-badge t1">Tier 1</span></td></tr>
+        <tr><td><a href="ai-chatbots.html">HR Policies &amp; FAQ Bot</a></td><td>Answers policy and process questions directly</td><td><span class="mini-badge t1">Tier 1</span></td></tr>
+        <tr><td><a href="ai-chatbots.html">New Manager Support Bot</a></td><td>Coaches a leader through a PIP or performance conversation</td><td><span class="mini-badge t2">Tier 2</span></td></tr>
+        <tr><td><a href="hr-onboarding-agent.html">Onboarding Agent</a></td><td>Reminds a manager a check-in isn't scheduled yet</td><td><span class="mini-badge t1">Tier 1</span></td></tr>
+        <tr><td><a href="hr-onboarding-agent.html">Onboarding Agent</a></td><td>Escalates a still-missed check-in to an HR partner</td><td><span class="mini-badge t2">Tier 2</span></td></tr>
+      </table>
+    </div>
+    <p>Notice what's absent: nothing here decides a rating, a promotion, or a paycheck on its own. That's not an accident, it's the framework working as intended.</p>
+  </section>
+
+  <section class="panel">
+    <div class="dwg-label">DWG-05 · Sign-Off</div>
+    <h2>Where it stands</h2>
+    <p>Adopted as the internal standard for this work: applied retroactively to the three live chatbots, and built into the onboarding agent's design from day one rather than bolted on after.</p>
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-num">DONE</div>
+        <div><h4>Classify every existing AI tool</h4><p>Sorted the chatbots and the onboarding agent's behaviors into tiers, and confirmed nothing already live was quietly operating in Tier 3 territory.</p></div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">NEXT</div>
+        <div><h4>Build the logging requirement into the platform, not just the doc</h4><p>Add the "always logged" pillar directly into the Copilot Studio build pattern, so it's structural rather than something a builder has to remember.</p></div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">THEN</div>
+        <div><h4>Make it the first question for every new AI idea</h4><p>Any new use case gets classified before it gets scoped, not after a prototype already exists and momentum makes Tier 3 feel negotiable.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div>Cassie Kesterholt <a href="https://linkedin.com/in/casskesterholt" target="_blank" rel="noopener">linkedin.com/in/casskesterholt</a></div>
+    <div>Responsible AI in HR, Framework</div>
+  </footer>
+</div>
+
+<script>
+  document.querySelectorAll('.pillar').forEach(p => {
+    p.addEventListener('click', () => {
+      const wasOpen = p.classList.contains('open');
+      document.querySelectorAll('.pillar').forEach(o => o.classList.remove('open'));
+      if(!wasOpen){
+        p.classList.add('open');
+        p.querySelector('.p-detail').textContent = p.dataset.detail;
+      }
+    });
+  });
+
+  const scenarios = [
+    { q: "Answer a question about PTO balance", tier: 1, reason: "Factual and reversible, with no judgment call involved. The agent can just answer it." },
+    { q: "Remind a manager their 60-day check-in isn't scheduled", tier: 1, reason: "A nudge, not a decision. Worst case, it's an unnecessary reminder, not a lost opportunity." },
+    { q: "Summarize a policy in plain language", tier: 1, reason: "Explaining an existing, already-approved policy is informational. There's nothing to decide." },
+    { q: "Draft talking points for a PIP conversation", tier: 2, reason: "Coaching content that could shape a real conversation. The manager reviews it and decides what to actually say." },
+    { q: "Suggest a first-pass performance rating", tier: 2, reason: "A useful starting point laddered to written accomplishments, but nothing is final until a person confirms it." },
+    { q: "Screen and rank resumes for an open role", tier: 3, reason: "Significant legal exposure and a well-documented history of bias risk in automated screening. A recruiter reviews every candidate directly." },
+    { q: "Decide who gets promoted", tier: 3, reason: "Career-altering and inherently a judgment call about a person. AI can help surface data, it never makes this call." },
+    { q: "Recommend a specific compensation adjustment", tier: 3, reason: "Pay decisions carry legal and equity implications too significant to automate, even as a suggestion the agent finalizes on its own." }
+  ];
+
+  const tierMeta = {
+    1: { label: "Tier 1 · Autonomous", cls: "t1" },
+    2: { label: "Tier 2 · Recommend, Human Approves", cls: "t2" },
+    3: { label: "Tier 3 · Human Only", cls: "t3" }
+  };
+
+  const chipsEl = document.getElementById('scenario-chips');
+  const verdictEl = document.getElementById('verdict');
+
+  scenarios.forEach((s, idx) => {
+    const chip = document.createElement('div');
+    chip.className = 'chip';
+    chip.textContent = s.q;
+    chip.onclick = () => {
+      document.querySelectorAll('#scenario-chips .chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      const meta = tierMeta[s.tier];
+      verdictEl.innerHTML =
+        '<div class="tier-badge ' + meta.cls + '">' + meta.label + '</div>' +
+        '<p class="verdict-text">' + s.reason + '</p>';
+    };
+    chipsEl.appendChild(chip);
+  });
+</script>
+</body>
+</html>
