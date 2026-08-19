@@ -2,7 +2,7 @@
 
 A design case study on redesigning a performance management framework: the problem (rating inflation, disconnected corporate priorities, inconsistent cascading of strategic initiatives), the stakeholder-driven design process, the resulting four-pillar architecture, and a working interactive demo of how ratings are calibrated.
 
-**Live version:** [add your GitHub Pages URL here once published](https://ohcassie.github.io/)
+**Live version:** (https://ohcassie.github.io/)
 
 ## About
 
