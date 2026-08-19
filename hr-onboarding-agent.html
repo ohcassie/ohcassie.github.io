@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>HR Onboarding Agent, Cassie Kesterholt</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #142a40;
+    --bg-panel: #1b3752;
+    --bg-panel-2: #204064;
+    --grid-line: rgba(232,228,217,0.06);
+    --grid-line-strong: rgba(232,228,217,0.14);
+    --paper: #eae5d6;
+    --paper-dim: #b9c3cd;
+    --amber: #e0a83d;
+    --rust: #d6684a;
+    --sage: #6fae8c;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+    --font-body: 'Inter', sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      repeating-linear-gradient(0deg, var(--grid-line) 0px, var(--grid-line) 1px, transparent 1px, transparent 32px),
+      repeating-linear-gradient(90deg, var(--grid-line) 0px, var(--grid-line) 1px, transparent 1px, transparent 32px),
+      var(--bg);
+    color: var(--paper);
+    font-family: var(--font-body);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  a{ color: var(--amber); }
+  .sheet{ max-width: 980px; margin: 0 auto; padding: 28px 28px 80px; }
+  .titleblock{ border: 1.5px solid var(--grid-line-strong); padding: 22px 24px; margin-bottom: 40px; position: relative; }
+  .titleblock::before, .titleblock::after{ content: ""; position: absolute; width: 10px; height: 10px; border: 1.5px solid var(--amber); }
+  .titleblock::before{ top: -6px; left: -6px; border-right: none; border-bottom: none; }
+  .titleblock::after{ bottom: -6px; right: -6px; border-left: none; border-top: none; }
+  .tb-eyebrow{ font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--amber); margin-bottom: 10px; }
+  h1{ font-family: var(--font-display); font-weight: 700; font-size: clamp(28px, 4.2vw, 42px); margin: 0 0 14px; letter-spacing: -0.01em; color: var(--paper); }
+  .tb-meta{ display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px 24px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--grid-line-strong); }
+  .tb-meta div{ font-family: var(--font-mono); font-size: 12px; color: var(--paper-dim); }
+  .tb-meta span{ display:block; color: var(--paper); font-size: 13px; margin-top: 2px; }
+  .tb-status{ display:inline-block; margin-top: 16px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--bg); background: var(--amber); padding: 5px 10px; }
+  .dwg-label{ font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.1em; color: var(--amber); text-transform: uppercase; margin-bottom: 8px; display:flex; align-items:center; gap: 10px; }
+  .dwg-label::after{ content:""; flex:1; height:1px; background: var(--grid-line-strong); }
+  section.panel{ margin-bottom: 56px; }
+  h2{ font-family: var(--font-display); font-weight: 600; font-size: clamp(20px, 3vw, 26px); margin: 0 0 14px; color: var(--paper); }
+  p{ color: var(--paper-dim); margin: 0 0 14px; font-size: 15px; }
+  p.lede{ color: var(--paper); font-size: 16px; }
+  strong{ color: var(--paper); font-weight: 600; }
+
+  .pain-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin: 20px 0; }
+  .pain-card{ background: var(--bg-panel); border: 1px solid var(--grid-line-strong); border-left: 3px solid var(--rust); padding: 16px 18px; }
+  .pain-card.sage{ border-left-color: var(--sage); }
+  .pain-card .pc-num{ font-family: var(--font-mono); font-size: 11px; color: var(--rust); letter-spacing: 0.08em; }
+  .pain-card.sage .pc-num{ color: var(--sage); }
+  .pain-card p{ margin: 8px 0 0; font-size: 14px; color: var(--paper); }
+
+  .widget{ background: var(--bg-panel); border: 1px solid var(--grid-line-strong); padding: 22px 24px 26px; margin: 20px 0 10px; }
+  .widget-head{ display:flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 10px; margin-bottom: 18px; }
+  .widget-head h3{ font-family: var(--font-display); font-size: 17px; margin: 0; color: var(--paper); }
+
+  .pillars{ display:grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; margin: 20px 0; }
+  .pillar{ background: var(--bg-panel); border: 1px solid var(--grid-line-strong); padding: 18px; cursor: pointer; transition: border-color 0.25s ease, background 0.25s ease; }
+  .pillar:hover{ border-color: var(--amber); }
+  .pillar.open{ background: var(--bg-panel-2); border-color: var(--amber); }
+  .pillar .p-tag{ font-family: var(--font-mono); font-size: 10.5px; color: var(--amber); letter-spacing: 0.08em; }
+  .pillar h4{ font-family: var(--font-display); font-size: 16px; margin: 8px 0 0; color: var(--paper); }
+  .pillar .p-detail{ display:none; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--grid-line); font-size: 13px; color: var(--paper-dim); }
+  .pillar.open .p-detail{ display:block; }
+
+  .bot-tabs{ display:flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }
+  .bot-tab{
+    font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.03em; padding: 8px 14px;
+    border: 1px solid var(--grid-line-strong); background: transparent; color: var(--paper-dim); cursor: pointer;
+  }
+  .bot-tab.active{ background: var(--amber); color: var(--bg); border-color: var(--amber); }
+
+  .chat-window{ background: var(--bg); border: 1px solid var(--grid-line-strong); padding: 18px; min-height: 180px; display:flex; flex-direction:column; gap: 12px; }
+  .chat-bubble{ max-width: 78%; padding: 10px 14px; font-size: 13.5px; line-height: 1.5; }
+  .chat-bubble.user{ align-self:flex-end; background: var(--bg-panel-2); color: var(--paper); border: 1px solid var(--grid-line-strong); }
+  .chat-bubble.bot{ align-self:flex-start; background: var(--bg-panel); color: var(--paper); border-left: 2px solid var(--sage); }
+  .chat-empty{ color: var(--paper-dim); font-family: var(--font-mono); font-size: 12.5px; align-self:center; margin: auto; }
+
+  .chips{ display:flex; flex-wrap:wrap; gap: 8px; margin-top: 16px; }
+  .chip{
+    font-family: var(--font-body); font-size: 12.5px; padding: 7px 12px; border: 1px solid var(--grid-line-strong);
+    background: var(--bg-panel-2); color: var(--paper-dim); cursor: pointer; transition: border-color 0.2s ease, color 0.2s ease;
+  }
+  .chip:hover{ border-color: var(--sage); color: var(--paper); }
+
+  /* Milestone journey */
+  .journey{ display:flex; gap: 0; margin: 22px 0 10px; overflow-x: auto; padding-bottom: 4px; }
+  .stop{
+    flex: 1 1 0; min-width: 130px; text-align:left; background: none; border: none; cursor: pointer;
+    color: var(--paper-dim); padding: 0 14px 18px 0; position: relative; font-family: inherit;
+  }
+  .stop::before{
+    content: ""; display:block; width: 12px; height: 12px; border-radius: 50%;
+    background: var(--bg-panel-2); border: 2px solid var(--grid-line-strong); margin-bottom: 10px;
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+  .stop::after{
+    content: ""; position:absolute; top: 5px; left: 14px; right: -2px; height: 2px; background: var(--grid-line-strong);
+  }
+  .stop:last-child::after{ display:none; }
+  .stop.active::before{ background: var(--amber); border-color: var(--amber); }
+  .stop .s-day{ font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--paper-dim); }
+  .stop.active .s-day{ color: var(--amber); }
+  .stop .s-label{ font-family: var(--font-display); font-size: 14.5px; margin-top: 3px; color: var(--paper); }
+  .journey-detail{ background: var(--bg); border: 1px solid var(--grid-line-strong); padding: 18px 20px; }
+  .journey-detail .jd-tag{ font-family: var(--font-mono); font-size: 11px; color: var(--sage); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; }
+  .journey-detail p{ margin:0; color: var(--paper); font-size: 14.5px; }
+
+  .flow{ display:flex; flex-direction:column; gap: 0; margin: 20px 0; }
+  .flow-step{ display:grid; grid-template-columns: 34px 1fr; gap: 16px; padding: 14px 0; border-top: 1px solid var(--grid-line-strong); }
+  .flow-step:last-child{ border-bottom: 1px solid var(--grid-line-strong); }
+  .flow-num{ font-family: var(--font-mono); font-size: 12px; color: var(--amber); padding-top: 2px; }
+  .flow-step h4{ font-family: var(--font-display); font-size: 15px; margin: 0 0 4px; color: var(--paper); }
+  .flow-step p{ margin:0; font-size: 13.5px; }
+
+  footer{ margin-top: 60px; padding-top: 20px; border-top: 1px solid var(--grid-line-strong); font-family: var(--font-mono); font-size: 12px; color: var(--paper-dim); display:flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <div class="titleblock">
+    <div class="tb-eyebrow">Talent Development / AI Enablement, Design Case Study</div>
+    <h1>HR Onboarding Agent</h1>
+    <p class="lede">A purpose-built agent that walks a new hire from offer acceptance through day 90, so a good first impression doesn't depend on which manager they happen to land with.</p>
+    <div class="tb-status">In design, piloting with next hire class</div>
+    <div class="tb-meta">
+      <div>Drawn by<span><a href="https://linkedin.com/in/casskesterholt" target="_blank" rel="noopener" style="color: inherit; text-decoration: underline;">Cassie Kesterholt</a></span></div>
+      <div>Scope<span>Every new hire, all departments</span></div>
+      <div>Built in<span>Copilot Studio</span></div>
+      <div>Status<span>Concept validated, piloting</span></div>
+    </div>
+  </div>
+
+  <section class="panel">
+    <div class="dwg-label">DWG-01 · Site Survey</div>
+    <h2>Onboarding quality was a function of which manager you got</h2>
+    <p>None of the pieces were missing. There was a checklist, an IT ticket, a benefits deadline, an orientation deck. The problem was that all of it lived in different places, got handed to a brand-new manager to orchestrate on top of their normal job, and depended entirely on that manager remembering to run it well.</p>
+    <p>Some new hires got a great first 90 days: a clear plan, regular check-ins, a manager who knew what to prompt and when. Others got a laptop, a login, and silence until their first 1x1. Same company, same offer letter, wildly different experience, and HR only found out which one happened when a new hire was already disengaged or already gone.</p>
+    <div class="pain-grid">
+      <div class="pain-card"><div class="pc-num">01</div><p>Pre-Day-1 logistics (paperwork, IT setup, what to expect) sat scattered across systems, so a new hire's first real interaction was often confusion, not welcome.</p></div>
+      <div class="pain-card"><div class="pc-num">02</div><p>Onboarding quality rode entirely on the assigned manager's bandwidth and experience, with no consistent floor underneath a first-time manager or an overloaded one.</p></div>
+      <div class="pain-card"><div class="pc-num">03</div><p>New hires were flooded with information in week one, then left largely on their own past that, right when role-specific questions actually start showing up.</p></div>
+      <div class="pain-card"><div class="pc-num">04</div><p>The HR team fielded the same repetitive questions, badge access, benefits enrollment windows, where to find a policy, for every single new hire class.</p></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="dwg-label">DWG-02 · Structural Plan</div>
+    <h2>One agent, four moments it's built to carry</h2>
+    <p>Instead of one static checklist handed to a manager, the agent stays present across the whole arc, answering the new hire directly and prompting the manager at the moments they're most likely to drop the ball. Click a pillar to open it.</p>
+    <div class="pillars" id="pillars">
+      <div class="pillar" data-detail="From offer acceptance to day 1, the agent answers logistics questions directly, what to bring, when equipment ships, when benefits and systems access activate, so the new hire isn't left guessing in the gap between signing and starting.">
+        <div class="p-tag">Pillar 01</div><h4>Pre-Day-1 Concierge</h4>
+        <div class="p-detail"></div>
+      </div>
+      <div class="pillar" data-detail="On day one, the agent orients the new hire to where to go, who to look for, and what the day actually holds, and reinforces who their onboarding buddy is, so the day feels planned rather than left to whoever happens to be free.">
+        <div class="p-tag">Pillar 02</div><h4>Day One &amp; Orientation</h4>
+        <div class="p-detail"></div>
+      </div>
+      <div class="pillar" data-detail="At the 30, 60, and 90 day marks, the agent surfaces what a new hire should have accomplished by that point and helps them prep for the check-in conversation, instead of that milestone quietly slipping by unacknowledged.">
+        <div class="p-tag">Pillar 03</div><h4>30 / 60 / 90 Day Ramp</h4>
+        <div class="p-detail"></div>
+      </div>
+      <div class="pillar" data-detail="The agent also prompts the manager directly at each checkpoint: schedule this check-in, ask this question, notice if this milestone hasn't happened yet. It doesn't replace the manager relationship, it makes sure the manager doesn't have to hold the whole plan in their head.">
+        <div class="p-tag">Pillar 04</div><h4>Manager Co-Pilot</h4>
+        <div class="p-detail"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="dwg-label">DWG-03 · Working Model</div>
+    <h2>Try a sample conversation</h2>
+    <p>Pick a phase of onboarding, then pick a question to see the kind of interaction the agent is built to handle. These are illustrative sample exchanges, not real agent output.</p>
+    <div class="widget">
+      <div class="bot-tabs" id="bot-tabs">
+        <button class="bot-tab active" data-phase="pre" onclick="setPhase('pre')">Before Day 1</button>
+        <button class="bot-tab" data-phase="day1" onclick="setPhase('day1')">Day One</button>
+        <button class="bot-tab" data-phase="ramp" onclick="setPhase('ramp')">30 / 60 / 90 Ramp</button>
+      </div>
+      <div class="chat-window" id="chat-window">
+        <div class="chat-empty" id="chat-empty">Pick a question below to start a sample conversation.</div>
+      </div>
+      <div class="chips" id="chips"></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="dwg-label">DWG-04 · Working Model</div>
+    <h2>The 90-day journey the agent carries</h2>
+    <p>Six checkpoints, each with a specific job for the agent to do. Click a stop to see what fires at that moment.</p>
+    <div class="widget">
+      <div class="journey" id="journey"></div>
+      <div class="journey-detail">
+        <div class="jd-tag" id="jd-tag">Offer Accepted</div>
+        <p id="jd-text"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="dwg-label">DWG-05 · Success Signals</div>
+    <h2>What tells us it's working</h2>
+    <p>This hasn't run a full onboarding cycle yet, so there's no adoption number to point to. These are the signals the pilot is designed to move, and the ones that will decide whether it scales past the first cohort.</p>
+    <div class="pain-grid">
+      <div class="pain-card sage"><div class="pc-num">01</div><p><strong>30/60/90 check-ins actually happen</strong>, on time, for every new hire, regardless of how experienced or busy their manager is.</p></div>
+      <div class="pain-card sage"><div class="pc-num">02</div><p><strong>Repetitive logistics tickets to HR drop</strong> for the questions the agent is built to answer directly, freeing the team for the questions that need a real person.</p></div>
+      <div class="pain-card sage"><div class="pc-num">03</div><p><strong>New hire pulse survey scores at day 30 and day 90</strong> stop varying so widely by manager, showing the experience has a consistent floor under it.</p></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="dwg-label">DWG-06 · Sign-Off</div>
+    <h2>Where it stands</h2>
+    <p>The design is complete and scoped for a pilot rather than an enterprise-wide launch, following the same playbook that worked for the earlier Copilot Studio bots: prove it narrow before going broad.</p>
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-num">NOW</div>
+        <div><h4>Build against the four pillars</h4><p>Stand up the agent in Copilot Studio using the same platform and lessons learned from the development, HR FAQ, and new manager bots already live.</p></div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">NEXT</div>
+        <div><h4>Pilot with the next new hire class</h4><p>Run it end to end with one incoming cohort and their managers before opening it up further, and gather feedback from both sides.</p></div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">THEN</div>
+        <div><h4>Check the success signals</h4><p>Look at check-in completion, ticket volume, and pulse survey variance from the pilot cohort before deciding how far to roll it out.</p></div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">SCALE</div>
+        <div><h4>Open it to every new hire</h4><p>If the pilot moves the signals it's meant to, extend it org-wide as the default onboarding experience, not an optional add-on.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div>Cassie Kesterholt <a href="https://linkedin.com/in/casskesterholt" target="_blank" rel="noopener">linkedin.com/in/casskesterholt</a></div>
+    <div>HR Onboarding Agent, Design Case Study</div>
+  </footer>
+</div>
+
+<script>
+  document.querySelectorAll('.pillar').forEach(p => {
+    p.addEventListener('click', () => {
+      const wasOpen = p.classList.contains('open');
+      document.querySelectorAll('.pillar').forEach(o => o.classList.remove('open'));
+      if(!wasOpen){
+        p.classList.add('open');
+        p.querySelector('.p-detail').textContent = p.dataset.detail;
+      }
+    });
+  });
+
+  const conversations = {
+    pre: [
+      { q: "What do I need to bring on my first day?", a: "Just a photo ID for badge setup, your laptop will already be configured and waiting at your desk (or shipped, if you're remote). Everything else, forms, tax docs, direct deposit, is handled in your new hire portal before day one." },
+      { q: "When do my benefits kick in?", a: "Coverage starts on your first day, but you'll have a 30-day window to actually make your elections. I can walk you through the enrollment steps whenever you're ready." },
+      { q: "I haven't gotten my laptop shipping info yet.", a: "That usually goes out about a week before your start date. If it's closer than that and you still don't have tracking info, I'll flag it to IT directly so it doesn't slip." }
+    ],
+    day1: [
+      { q: "Where do I go for orientation?", a: "Orientation is in the main building, and your onboarding buddy will meet you at the front desk at 9am to walk you in, so you won't be finding it cold on your own." },
+      { q: "Who's my onboarding buddy?", a: "Your buddy is someone on your team, not your manager, so you have a low-stakes person to ask the small questions to. I'll send you their name and a quick intro the morning of day one." },
+      { q: "What's the dress code?", a: "Business casual for most teams, but it varies a little by department. Want me to check what's typical for your specific team so you're not overdressed or underdressed on day one?" }
+    ],
+    ramp: [
+      { q: "What should I have accomplished by 30 days?", a: "By day 30 the goal is mostly ramp, not results: you should understand your core responsibilities, know who your key partners are, and have had your first 1x1 with your manager. I can pull up the specific milestones for your role." },
+      { q: "My manager hasn't scheduled our 60-day check-in.", a: "Got it, I'll send your manager a reminder now. If it still hasn't happened by early next week, let me know and we can loop in your HR partner." },
+      { q: "How do I give feedback on my onboarding experience?", a: "There's a short pulse survey at day 30, 60, and 90, but you don't have to wait for that. Tell me what's working or not, and I'll make sure it gets to the right person." }
+    ]
+  };
+
+  let currentPhase = 'pre';
+
+  function renderChips(){
+    const chipsEl = document.getElementById('chips');
+    chipsEl.innerHTML = '';
+    conversations[currentPhase].forEach((pair, idx) => {
+      const chip = document.createElement('div');
+      chip.className = 'chip';
+      chip.textContent = pair.q;
+      chip.onclick = () => askQuestion(idx);
+      chipsEl.appendChild(chip);
+    });
+  }
+
+  function setPhase(phase){
+    currentPhase = phase;
+    document.querySelectorAll('.bot-tab').forEach(t => t.classList.toggle('active', t.dataset.phase === phase));
+    const win = document.getElementById('chat-window');
+    win.innerHTML = '<div class="chat-empty" id="chat-empty">Pick a question below to start a sample conversation.</div>';
+    renderChips();
+  }
+
+  function askQuestion(idx){
+    const pair = conversations[currentPhase][idx];
+    const win = document.getElementById('chat-window');
+    const empty = document.getElementById('chat-empty');
+    if(empty) empty.remove();
+
+    const userBubble = document.createElement('div');
+    userBubble.className = 'chat-bubble user';
+    userBubble.textContent = pair.q;
+    win.appendChild(userBubble);
+
+    setTimeout(() => {
+      const botBubble = document.createElement('div');
+      botBubble.className = 'chat-bubble bot';
+      botBubble.textContent = pair.a;
+      win.appendChild(botBubble);
+      win.scrollTop = win.scrollHeight;
+    }, 300);
+
+    win.scrollTop = win.scrollHeight;
+  }
+
+  renderChips();
+
+  const stops = [
+    { day: "Offer Accepted", label: "Pre-boarding starts", text: "The moment the offer is signed, the agent sends a welcome message, opens the new hire portal, and kicks off IT equipment provisioning, so there's no dead air between signing and day one." },
+    { day: "Day 1", label: "Orientation", text: "The agent sends the new hire their day-one agenda, their onboarding buddy's name, and where to go, and separately reminds the manager to block their calendar for a first-day welcome." },
+    { day: "Week 1", label: "First check-in", text: "The agent prompts the manager to schedule a first 1x1 if it isn't on the calendar yet, and checks in with the new hire on how the first few days landed." },
+    { day: "Day 30", label: "Ramp checkpoint", text: "The agent surfaces role-specific 30-day milestones to the new hire, reminds the manager to hold the 30-day check-in, and sends the first onboarding pulse survey." },
+    { day: "Day 60", label: "Momentum check", text: "The agent flags whether the 60-day check-in has actually been scheduled, not just assumed, and nudges the manager directly if it hasn't." },
+    { day: "Day 90", label: "Ramp complete", text: "The agent sends the final pulse survey, confirms the new hire has a clear picture of what full performance looks like, and closes out the guided onboarding period." }
+  ];
+
+  const journeyEl = document.getElementById('journey');
+  stops.forEach((s, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'stop' + (i === 0 ? ' active' : '');
+    btn.innerHTML = '<div class="s-day">' + s.day + '</div><div class="s-label">' + s.label + '</div>';
+    btn.onclick = () => setStop(i);
+    journeyEl.appendChild(btn);
+  });
+
+  function setStop(i){
+    document.querySelectorAll('.stop').forEach((el, idx) => el.classList.toggle('active', idx === i));
+    document.getElementById('jd-tag').textContent = stops[i].day + ' · ' + stops[i].label;
+    document.getElementById('jd-text').textContent = stops[i].text;
+  }
+  setStop(0);
+</script>
+</body>
+</html>
