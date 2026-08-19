@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Resume, Cassie Kesterholt</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #142a40;
+    --bg-panel: #1b3752;
+    --bg-panel-2: #204064;
+    --grid-line: rgba(232,228,217,0.06);
+    --grid-line-strong: rgba(232,228,217,0.14);
+    --paper: #eae5d6;
+    --paper-dim: #b9c3cd;
+    --amber: #e0a83d;
+    --rust: #d6684a;
+    --sage: #6fae8c;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+    --font-body: 'Inter', sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      repeating-linear-gradient(0deg, var(--grid-line) 0px, var(--grid-line) 1px, transparent 1px, transparent 32px),
+      repeating-linear-gradient(90deg, var(--grid-line) 0px, var(--grid-line) 1px, transparent 1px, transparent 32px),
+      var(--bg);
+    color: var(--paper);
+    font-family: var(--font-body);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  a{ color: var(--amber); }
+  .sheet{ max-width: 900px; margin: 0 auto; padding: 28px 28px 80px; }
+  .titleblock{ border: 1.5px solid var(--grid-line-strong); padding: 22px 24px; margin-bottom: 40px; position: relative; }
+  .titleblock::before, .titleblock::after{ content: ""; position: absolute; width: 10px; height: 10px; border: 1.5px solid var(--amber); }
+  .titleblock::before{ top: -6px; left: -6px; border-right: none; border-bottom: none; }
+  .titleblock::after{ bottom: -6px; right: -6px; border-left: none; border-top: none; }
+  .tb-eyebrow{ font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--amber); margin-bottom: 10px; }
+  h1{ font-family: var(--font-display); font-weight: 700; font-size: clamp(28px, 4.2vw, 40px); margin: 0 0 6px; letter-spacing: -0.01em; color: var(--paper); }
+  .h1-sub{ font-family: var(--font-mono); font-size: 13px; color: var(--paper-dim); margin: 0 0 14px; }
+  .tb-meta{ display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px 24px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--grid-line-strong); }
+  .tb-meta div{ font-family: var(--font-mono); font-size: 12px; color: var(--paper-dim); }
+  .tb-meta span{ display:block; color: var(--paper); font-size: 13px; margin-top: 2px; overflow-wrap: anywhere; }
+  .dl-btn{
+    display:inline-flex; align-items:center; gap: 8px; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.05em;
+    text-transform: uppercase; padding: 10px 18px; border: 1px solid var(--amber); background: var(--amber); color: var(--bg);
+    text-decoration:none; margin-top: 18px; cursor: pointer;
+  }
+  .dl-btn:hover{ background: transparent; color: var(--amber); }
+
+  .dwg-label{ font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.1em; color: var(--amber); text-transform: uppercase; margin-bottom: 18px; display:flex; align-items:center; gap: 10px; }
+  .dwg-label::after{ content:""; flex:1; height:1px; background: var(--grid-line-strong); }
+  section.panel{ margin-bottom: 48px; }
+  p{ color: var(--paper-dim); margin: 0 0 14px; font-size: 15px; }
+  p.lede{ color: var(--paper); font-size: 16px; }
+
+  .role{ margin-bottom: 26px; }
+  .role-head{ display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap: 6px 16px; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid var(--grid-line-strong); }
+  .role-titles{ display:flex; flex-direction:column; }
+  .role-title{ font-family: var(--font-display); font-size: 16.5px; color: var(--paper); font-weight: 600; }
+  .role-co{ font-family: var(--font-mono); font-size: 12px; color: var(--paper-dim); margin-top: 3px; }
+  .role-dates{ font-family: var(--font-mono); font-size: 12px; color: var(--amber); white-space: nowrap; }
+  .role ul{ margin:0; padding-left: 20px; }
+  .role li{ font-size: 14px; color: var(--paper-dim); margin-bottom: 9px; }
+  .role li::marker{ color: var(--sage); }
+  .role p.role-desc{ font-size: 14px; color: var(--paper-dim); margin: 0; }
+
+  .skill-group{ margin-bottom: 18px; }
+  .skill-group-label{ font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--amber); margin-bottom: 9px; }
+  .skill-chips{ display:flex; flex-wrap:wrap; gap: 8px; }
+  .skill-chip{ font-size: 12.5px; padding: 6px 12px; border: 1px solid var(--grid-line-strong); background: var(--bg-panel-2); color: var(--paper-dim); }
+
+  .edu-cert{ background: var(--bg-panel); border: 1px solid var(--grid-line-strong); padding: 18px 20px; margin-bottom: 14px; }
+  .edu-cert .ec-label{ font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--amber); margin-bottom: 6px; }
+  .edu-cert p{ margin:0; color: var(--paper); font-size: 14.5px; }
+
+  footer{ margin-top: 60px; padding-top: 20px; border-top: 1px solid var(--grid-line-strong); font-family: var(--font-mono); font-size: 12px; color: var(--paper-dim); display:flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+
+  @media print{
+    body{ background: #fff !important; color: #1a1a1a; font-size: 12.5px; }
+    .sheet{ max-width: 100%; padding: 0; }
+    .no-print{ display:none !important; }
+    .titleblock{ border-color: #999; }
+    .titleblock::before, .titleblock::after{ display:none; }
+    .tb-eyebrow{ color: #555; }
+    h1{ color: #111; }
+    .h1-sub{ color: #333; }
+    .tb-meta div{ color: #555; }
+    .tb-meta span{ color: #111; }
+    a{ color: #111; text-decoration: underline; }
+    .dwg-label{ color: #555; }
+    .dwg-label::after{ background: #ccc; }
+    p{ color: #222; }
+    p.lede{ color: #111; }
+    section.panel{ margin-bottom: 26px; page-break-inside: avoid; }
+    .role{ margin-bottom: 16px; page-break-inside: avoid; }
+    .role-head{ border-bottom-color: #ccc; }
+    .role-title{ color: #111; }
+    .role-co{ color: #444; }
+    .role-dates{ color: #555; }
+    .role li{ color: #222; }
+    .role li::marker{ color: #555; }
+    .role p.role-desc{ color: #222; }
+    .skill-chip{ background: #f2f2f2; color: #333; border-color: #ccc; }
+    .edu-cert{ background: #f7f6f2; border-color: #ccc; }
+    .edu-cert p{ color: #111; }
+    footer{ border-top-color: #ccc; color: #555; }
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <div class="titleblock">
+    <div class="tb-eyebrow">Resume</div>
+    <h1>Cassie Kesterholt</h1>
+    <div class="h1-sub">CPTM &middot; sPHR &middot; 10+ Years Progressive HR, Talent Development &amp; Organizational Development</div>
+    <p class="lede">I build scalable people programs that make managers' lives easier and employees' experiences better. Over 10+ years of progressive experience in people-focused roles, I have led company-wide performance management, talent reviews, compensation planning, career development, and manager enablement programs while serving as a trusted advisor to executive leaders. I report directly to the CHRO and lead a team of 15 across the US and Mexico. I move seamlessly between strategy and execution: one day partnering with executives on organizational design, the next refining core people processes or coaching managers through complexity. I leverage AI and automation to optimize people systems, having built three enterprise AI agents with 82% adoption across 1,650+ employees. I thrive in high-growth environments where building from the ground up is the expectation, not the exception.</p>
+    <a class="dl-btn no-print" href="resume.pdf" download>Download PDF &darr;</a>
+    <div class="tb-meta">
+      <div>Location<span>Dallas, TX (Remote)</span></div>
+      <div>Email<span><a href="mailto:cass.holdridge@gmail.com">cass.holdridge@gmail.com</a></span></div>
+      <div>LinkedIn<span><a href="https://linkedin.com/in/casskesterholt" target="_blank" rel="noopener">linkedin.com/in/casskesterholt</a></span></div>
+      <div>Current Role<span>Director, Talent Development, OneCall</span></div>
+    </div>
+  </div>
+
+  <section class="panel">
+    <div class="dwg-label">Experience</div>
+
+    <div class="role">
+      <div class="role-head">
+        <div class="role-titles">
+          <div class="role-title">Director, Talent Development</div>
+          <div class="role-co">OneCall, Jacksonville, FL (Remote)</div>
+        </div>
+        <div class="role-dates">Aug 2025 &ndash; Present</div>
+      </div>
+      <ul>
+        <li>Developed scalable manager enablement programs, tools, and resources: designed a company-wide leadership development program from scratch covering performance conversations, people leadership, and manager effectiveness. Delivered training to 500+ leaders totaling 1,000+ training hours in 2024 alone.</li>
+        <li>Stood up the company's first formal talent management strategy &mdash; 9-box calibration, succession planning, and structured career pathways &mdash; giving leadership real data to make development decisions and strengthening bench depth across the enterprise.</li>
+        <li>Currently leading people operations integration for OneCall's acquisition of Data Dimensions, including leadership assessment, talent retention, cultural integration, and workforce readiness. Previously built the M&amp;A talent integration playbook from scratch during an earlier acquisition, partnering with executive leadership to align talent practices and keep disruption low and retention high.</li>
+        <li>Launched talent infrastructure for a new site in Monterrey, MX from scratch &mdash; building bilingual onboarding, training programs, and development systems in a market we had never operated in before.</li>
+        <li>Drive strategic People initiatives that improve engagement, retention, and manager effectiveness: executive sponsor for 4 Employee Resource Groups and enterprise DEI strategy. A collaborative, low-ego approach with willingness to roll up sleeves.</li>
+        <li>Built "Dev," an enterprise LLM chatbot now used by 1,650+ employees for career development &mdash; it guides people through IDP-based reflection on their strengths, growth areas, and aspirations on their own terms. Also built a DEIB chatbot that helps manage and activate insights across 4 Employee Resource Groups. Nobody asked for these to be built; the opportunity was there, so it happened. Also oversee a self-paced training catalog of 43+ modules accessed by 3,000+ colleagues annually.</li>
+        <li>Report directly to the CHRO. Mentor and elevate a growing People team of 15 across the US and Mexico, delivering 13,000+ training hours annually. Analyze People metrics and trends to identify opportunities and recommend solutions. Reduced new hire turnover from 43% to 25% through data-driven program redesign.</li>
+      </ul>
+    </div>
+
+    <div class="role">
+      <div class="role-head">
+        <div class="role-titles">
+          <div class="role-title">Senior Manager, People Development</div>
+          <div class="role-co">OneCall, Jacksonville, FL (Remote)</div>
+        </div>
+        <div class="role-dates">Apr 2024 &ndash; Aug 2025</div>
+      </div>
+      <ul>
+        <li>Owned the strategy and execution of enterprise-wide talent programs &mdash; performance management, employee engagement, leadership development &mdash; during a period where the company was evolving fast and the playbook was being written in real time.</li>
+        <li>Designed and implemented a 9-box succession planning framework to guide talent calibration and growth pathways.</li>
+        <li>Built and refined enterprise competency models that translate organizational values into specific, actionable development plans for leaders at every level &mdash; connecting the work people do every day to where the company is headed.</li>
+        <li>Served as a trusted advisor to leaders across the business, coaching managers through employee relations, performance conversations, and leadership challenges. Balanced employee advocacy with business needs.</li>
+        <li>Navigated ambiguity and built programs from the ground up, moving between long-term strategy and immediate execution needs with resilience and flexibility.</li>
+      </ul>
+    </div>
+
+    <div class="role">
+      <div class="role-head">
+        <div class="role-titles">
+          <div class="role-title">Enterprise Learning Manager</div>
+          <div class="role-co">OneCall, Jacksonville, FL (Remote)</div>
+        </div>
+        <div class="role-dates">Sep 2023 &ndash; Apr 2024</div>
+      </div>
+      <ul>
+        <li>Developed and executed comprehensive enterprise learning programs to improve employee capabilities and support evolving business needs.</li>
+        <li>Partnered with department leaders to assess skill gaps, design role-based training pathways, and drive adoption of learning management systems (Cornerstone).</li>
+        <li>Redesigned new hire orientation, reducing time spent in orientation by 4 hours while improving effectiveness. Oriented 460+ new hires across 38 sessions annually.</li>
+      </ul>
+    </div>
+
+    <div class="role">
+      <div class="role-head">
+        <div class="role-titles">
+          <div class="role-title">Head of Operations</div>
+          <div class="role-co">Wedfuly, Denver, CO</div>
+        </div>
+        <div class="role-dates">Apr 2020 &ndash; Mar 2023</div>
+      </div>
+      <ul>
+        <li>Built the entire People function from zero at a high-growth, venture-backed startup: talent acquisition, training, performance management, and workforce planning for a 100% remote national workforce. There was no playbook to follow, so it got written from scratch.</li>
+        <li>Scaled a 100% contract-based workforce to support national event execution, improving margin per client by 25%.</li>
+        <li>Built the people and operational infrastructure that let the company scale nationally &mdash; which ultimately contributed to an appearance on CBS's Shark Tank.</li>
+        <li>Created internal training systems, performance review processes, and documentation for scalable onboarding. Team training initiatives resolved a $5M annual cost issue and saved $150K by addressing a compliance gap that retained a key provider.</li>
+        <li>Led HRIS operations and partnered with leadership on organizational policies, compensation structures, and employee engagement strategy.</li>
+      </ul>
+    </div>
+
+    <div class="role">
+      <div class="role-head">
+        <div class="role-titles">
+          <div class="role-title">Member Success Manager, People Development</div>
+          <div class="role-co">Galvanize, Denver, CO</div>
+        </div>
+        <div class="role-dates">May 2017 &ndash; May 2019</div>
+      </div>
+      <p class="role-desc">Managed member success, employee engagement, and professional development programming for a tech education community.</p>
+    </div>
+
+    <div class="role">
+      <div class="role-head">
+        <div class="role-titles">
+          <div class="role-title">Head of Operations and People</div>
+          <div class="role-co">Havenly, Denver, CO</div>
+        </div>
+        <div class="role-dates">Oct 2015 &ndash; Apr 2017</div>
+      </div>
+      <p class="role-desc">Led people operations, talent acquisition, performance management, and organizational development for a venture-backed startup.</p>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="dwg-label">Skills &amp; Tools</div>
+    <div class="skill-group">
+      <div class="skill-group-label">HRIS / HCM</div>
+      <div class="skill-chips">
+        <div class="skill-chip">Workday</div><div class="skill-chip">UKG</div><div class="skill-chip">BambooHR</div>
+        <div class="skill-chip">Cornerstone LMS</div><div class="skill-chip">Rippling</div><div class="skill-chip">Salesforce</div>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-label">ATS</div>
+      <div class="skill-chips"><div class="skill-chip">Greenhouse</div><div class="skill-chip">Lever</div></div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-label">Learning</div>
+      <div class="skill-chips"><div class="skill-chip">LinkedIn Learning</div><div class="skill-chip">Articulate / Rise</div></div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-label">Engagement / Performance</div>
+      <div class="skill-chips"><div class="skill-chip">Qualtrics</div><div class="skill-chip">15Five</div><div class="skill-chip">McLean &amp; Company</div></div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-label">AI</div>
+      <div class="skill-chips">
+        <div class="skill-chip">Microsoft Copilot Studio</div><div class="skill-chip">Prompt Engineering</div>
+        <div class="skill-chip">RAG</div><div class="skill-chip">Claude</div><div class="skill-chip">ChatGPT</div>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-label">Collaboration</div>
+      <div class="skill-chips">
+        <div class="skill-chip">Microsoft Teams</div><div class="skill-chip">SharePoint</div><div class="skill-chip">Confluence</div>
+        <div class="skill-chip">Slack</div><div class="skill-chip">Jira</div><div class="skill-chip">Airtable</div><div class="skill-chip">Google Workspace</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="dwg-label">Education &amp; Certifications</div>
+    <div class="edu-cert">
+      <div class="ec-label">Education</div>
+      <p>Texas Tech University, Lubbock, TX (2008) &mdash; Bachelor of Fine Arts</p>
+    </div>
+    <div class="edu-cert">
+      <div class="ec-label">Certifications</div>
+      <p>Senior Professional in Human Resources (sPHR), HRCI &middot; Certified Professional in Training Management (CPTM), ATD &middot; Google Project Management Certificate</p>
+    </div>
+  </section>
+
+  <footer>
+    <div>Cassie Kesterholt <a href="mailto:cass.holdridge@gmail.com">cass.holdridge@gmail.com</a></div>
+    <div class="no-print"><a href="index.html">&larr; Back to case studies</a></div>
+  </footer>
+</div>
+</body>
+</html>
