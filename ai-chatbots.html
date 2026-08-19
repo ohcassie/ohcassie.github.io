@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI Enablement: Three Copilot Studio Chatbots, Cassie Kesterholt</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #142a40;
+    --bg-panel: #1b3752;
+    --bg-panel-2: #204064;
+    --grid-line: rgba(232,228,217,0.06);
+    --grid-line-strong: rgba(232,228,217,0.14);
+    --paper: #eae5d6;
+    --paper-dim: #b9c3cd;
+    --amber: #e0a83d;
+    --rust: #d6684a;
+    --sage: #6fae8c;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+    --font-body: 'Inter', sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      repeating-linear-gradient(0deg, var(--grid-line) 0px, var(--grid-line) 1px, transparent 1px, transparent 32px),
+      repeating-linear-gradient(90deg, var(--grid-line) 0px, var(--grid-line) 1px, transparent 1px, transparent 32px),
+      var(--bg);
+    color: var(--paper);
+    font-family: var(--font-body);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  a{ color: var(--amber); }
+  .sheet{ max-width: 980px; margin: 0 auto; padding: 28px 28px 80px; }
+  .titleblock{ border: 1.5px solid var(--grid-line-strong); padding: 22px 24px; margin-bottom: 40px; position: relative; }
+  .titleblock::before, .titleblock::after{ content: ""; position: absolute; width: 10px; height: 10px; border: 1.5px solid var(--amber); }
+  .titleblock::before{ top: -6px; left: -6px; border-right: none; border-bottom: none; }
+  .titleblock::after{ bottom: -6px; right: -6px; border-left: none; border-top: none; }
+  .tb-eyebrow{ font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--amber); margin-bottom: 10px; }
+  h1{ font-family: var(--font-display); font-weight: 700; font-size: clamp(28px, 4.2vw, 42px); margin: 0 0 14px; letter-spacing: -0.01em; color: var(--paper); }
+  .tb-meta{ display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px 24px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--grid-line-strong); }
+  .tb-meta div{ font-family: var(--font-mono); font-size: 12px; color: var(--paper-dim); }
+  .tb-meta span{ display:block; color: var(--paper); font-size: 13px; margin-top: 2px; }
+  .tb-status{ display:inline-block; margin-top: 16px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--bg); background: var(--amber); padding: 5px 10px; }
+  .dwg-label{ font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.1em; color: var(--amber); text-transform: uppercase; margin-bottom: 8px; display:flex; align-items:center; gap: 10px; }
+  .dwg-label::after{ content:""; flex:1; height:1px; background: var(--grid-line-strong); }
+  section.panel{ margin-bottom: 56px; }
+  h2{ font-family: var(--font-display); font-weight: 600; font-size: clamp(20px, 3vw, 26px); margin: 0 0 14px; color: var(--paper); }
+  p{ color: var(--paper-dim); margin: 0 0 14px; font-size: 15px; }
+  p.lede{ color: var(--paper); font-size: 16px; }
+  strong{ color: var(--paper); font-weight: 600; }
+
+  .pain-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin: 20px 0; }
+  .pain-card{ background: var(--bg-panel); border: 1px solid var(--grid-line-strong); border-left: 3px solid var(--rust); padding: 16px 18px; }
+  .pain-card.sage{ border-left-color: var(--sage); }
+  .pain-card .pc-num{ font-family: var(--font-mono); font-size: 11px; color: var(--rust); letter-spacing: 0.08em; }
+  .pain-card.sage .pc-num{ color: var(--sage); }
+  .pain-card p{ margin: 8px 0 0; font-size: 14px; color: var(--paper); }
+
+  .widget{ background: var(--bg-panel); border: 1px solid var(--grid-line-strong); padding: 22px 24px 26px; margin: 20px 0 10px; }
+  .widget-head{ display:flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 10px; margin-bottom: 18px; }
+  .widget-head h3{ font-family: var(--font-display); font-size: 17px; margin: 0; color: var(--paper); }
+
+  .pillars{ display:grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; margin: 20px 0; }
+  .pillar{ background: var(--bg-panel); border: 1px solid var(--grid-line-strong); padding: 18px; cursor: pointer; transition: border-color 0.25s ease, background 0.25s ease; }
+  .pillar:hover{ border-color: var(--amber); }
+  .pillar.open{ background: var(--bg-panel-2); border-color: var(--amber); }
+  .pillar .p-tag{ font-family: var(--font-mono); font-size: 10.5px; color: var(--amber); letter-spacing: 0.08em; }
+  .pillar h4{ font-family: var(--font-display); font-size: 16px; margin: 8px 0 0; color: var(--paper); }
+  .pillar .p-detail{ display:none; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--grid-line); font-size: 13px; color: var(--paper-dim); }
+  .pillar.open .p-detail{ display:block; }
+
+  .bot-tabs{ display:flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }
+  .bot-tab{
+    font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.03em; padding: 8px 14px;
+    border: 1px solid var(--grid-line-strong); background: transparent; color: var(--paper-dim); cursor: pointer;
+  }
+  .bot-tab.active{ background: var(--amber); color: var(--bg); border-color: var(--amber); }
+
+  .chat-window{ background: var(--bg); border: 1px solid var(--grid-line-strong); padding: 18px; min-height: 180px; display:flex; flex-direction:column; gap: 12px; }
+  .chat-bubble{ max-width: 78%; padding: 10px 14px; font-size: 13.5px; line-height: 1.5; }
+  .chat-bubble.user{ align-self:flex-end; background: var(--bg-panel-2); color: var(--paper); border: 1px solid var(--grid-line-strong); }
+  .chat-bubble.bot{ align-self:flex-start; background: var(--bg-panel); color: var(--paper); border-left: 2px solid var(--sage); }
+  .chat-empty{ color: var(--paper-dim); font-family: var(--font-mono); font-size: 12.5px; align-self:center; margin: auto; }
+
+  .chips{ display:flex; flex-wrap:wrap; gap: 8px; margin-top: 16px; }
+  .chip{
+    font-family: var(--font-body); font-size: 12.5px; padding: 7px 12px; border: 1px solid var(--grid-line-strong);
+    background: var(--bg-panel-2); color: var(--paper-dim); cursor: pointer; transition: border-color 0.2s ease, color 0.2s ease;
+  }
+  .chip:hover{ border-color: var(--sage); color: var(--paper); }
+
+  .metric-row{ display:flex; gap: 20px; flex-wrap: wrap; margin: 20px 0; }
+  .metric{ flex:1; min-width: 180px; background: var(--bg-panel); border: 1px solid var(--grid-line-strong); padding: 20px; text-align:center; }
+  .metric .m-num{ font-family: var(--font-display); font-size: 34px; font-weight: 700; color: var(--sage); }
+  .metric .m-label{ font-family: var(--font-mono); font-size: 11.5px; color: var(--paper-dim); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 6px; }
+
+  footer{ margin-top: 60px; padding-top: 20px; border-top: 1px solid var(--grid-line-strong); font-family: var(--font-mono); font-size: 12px; color: var(--paper-dim); display:flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <div class="titleblock">
+    <div class="tb-eyebrow">AI Enablement, Design Case Study</div>
+    <h1>Three Copilot Studio Chatbots</h1>
+    <p class="lede">Driving real AI adoption across the people function by building three narrow, useful bots instead of one broad, vague one, aimed at career development, HR self-service, and new manager support.</p>
+    <div class="tb-status">Live, 82% adoption</div>
+    <div class="tb-meta">
+      <div>Drawn by<span><a href="https://linkedin.com/in/casskesterholt" target="_blank" rel="noopener" style="color: inherit; text-decoration: underline;">Cassie Kesterholt</a></span></div>
+      <div>Scope<span>1,650+ colleagues</span></div>
+      <div>Built in<span>Copilot Studio</span></div>
+      <div>Status<span>Live, adopted</span></div>
+    </div>
+  </div>
+
+  <section class="panel">
+    <div class="dwg-label">DWG-01 · Site Survey</div>
+    <h2>The tools existed. The habit didn't.</h2>
+    <p>The barrier here wasn't access. AI tools were already available across the organization. The barrier was skepticism and low adoption, the usual gap between a tool being technically available and people actually reaching for it in their day-to-day work.</p>
+    <div class="pain-grid">
+      <div class="pain-card"><div class="pc-num">01</div><p>AI tools were available but underused. Most colleagues had never tried them for anything beyond a novelty question.</p></div>
+      <div class="pain-card"><div class="pc-num">02</div><p>The people team specifically had no visible example of AI doing real HR work, so it stayed abstract instead of practical.</p></div>
+      <div class="pain-card"><div class="pc-num">03</div><p>A single broad, generic bot tends to underdeliver. Narrow, purpose-built bots needed a champion willing to build and prove them out first.</p></div>
+    </div>
+    <p>That last point is where this became personal rather than assigned. As an early adopter of new technology, the goal was to make the people team a visible example of what's possible with the tools already sitting in front of everyone, not to wait for a mandate.</p>
+  </section>
+
+  <section class="panel">
+    <div class="dwg-label">DWG-02 · Structural Plan</div>
+    <h2>Three bots, three distinct moments in the employee lifecycle</h2>
+    <p>Rather than one general-purpose assistant, each bot was scoped narrowly to a specific, recurring need. Click a bot to open it.</p>
+    <div class="pillars" id="pillars">
+      <div class="pillar" data-detail="Helps a colleague draft and navigate an Individual Development Plan (IDP): identifying goals, naming skill gaps, and preparing for a real career conversation with their leader or an external mentor. The goal was to make the hardest part, starting the plan, less intimidating.">
+        <div class="p-tag">Bot 01</div><h4>Development / IDP Assistant</h4>
+        <div class="p-detail"></div>
+      </div>
+      <div class="pillar" data-detail="Answers common HR policy and process questions directly, reducing inbound ticket volume to the frontline HR generalist and coordinator team. Rolled out alongside training for the HR team itself on self-service first, before escalating to a person.">
+        <div class="p-tag">Bot 02</div><h4>HR Policies &amp; FAQ</h4>
+        <div class="p-detail"></div>
+      </div>
+      <div class="pillar" data-detail="Supports first-time and newer people leaders through the moments they're least prepared for: performance conversations, PIPs, and coaching. It doesn't replace HR guidance, it helps a leader walk in prepared instead of walking in cold.">
+        <div class="p-tag">Bot 03</div><h4>New Manager Support</h4>
+        <div class="p-detail"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="dwg-label">DWG-03 · Working Model</div>
+    <h2>Try a sample conversation</h2>
+    <p>Pick a bot, then pick a question to see the kind of interaction it's built to handle. These are illustrative sample exchanges, not real chatbot output.</p>
+    <div class="widget">
+      <div class="bot-tabs" id="bot-tabs">
+        <button class="bot-tab active" data-bot="dev" onclick="setBot('dev')">Development / IDP</button>
+        <button class="bot-tab" data-bot="faq" onclick="setBot('faq')">HR Policies &amp; FAQ</button>
+        <button class="bot-tab" data-bot="mgr" onclick="setBot('mgr')">New Manager Support</button>
+      </div>
+      <div class="chat-window" id="chat-window">
+        <div class="chat-empty" id="chat-empty">Pick a question below to start a sample conversation.</div>
+      </div>
+      <div class="chips" id="chips"></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="dwg-label">DWG-04 · Results</div>
+    <h2>What actually moved</h2>
+    <p>The proof wasn't a pitch deck. It was colleagues actually using the tools, at scale.</p>
+    <div class="metric-row">
+      <div class="metric"><div class="m-num">82%</div><div class="m-label">Adoption across the org</div></div>
+      <div class="metric"><div class="m-num">1,650+</div><div class="m-label">Colleagues using the bots</div></div>
+      <div class="metric"><div class="m-num">3</div><div class="m-label">Purpose-built bots, one per real need</div></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="dwg-label">DWG-05 · Sign-Off</div>
+    <h2>Where it stands</h2>
+    <p>All three bots are live and in active use. They became the people team's proof point that AI tools were worth adopting, not just available, and the model for scoping any future bot narrowly instead of broadly.</p>
+  </section>
+
+  <footer>
+    <div>Cassie Kesterholt <a href="https://linkedin.com/in/casskesterholt" target="_blank" rel="noopener">linkedin.com/in/casskesterholt</a></div>
+    <div>AI Enablement, Design Case Study</div>
+  </footer>
+</div>
+
+<script>
+  document.querySelectorAll('.pillar').forEach(p => {
+    p.addEventListener('click', () => {
+      const wasOpen = p.classList.contains('open');
+      document.querySelectorAll('.pillar').forEach(o => o.classList.remove('open'));
+      if(!wasOpen){
+        p.classList.add('open');
+        p.querySelector('.p-detail').textContent = p.dataset.detail;
+      }
+    });
+  });
+
+  const conversations = {
+    dev: [
+      { q: "How do I start an IDP?", a: "Let's start with where you want to grow. Pick one skill or capability you'd like to build in the next 6 to 12 months, and I'll help you turn it into a goal, a timeline, and a couple of concrete actions you can bring to your leader." },
+      { q: "What should I bring to a mentor conversation?", a: "Bring one specific thing you're trying to figure out, not a general \"help me grow\" ask. A clear question gets a much more useful conversation than an open-ended one." },
+      { q: "Can you help me identify a stretch goal?", a: "Tell me a project or responsibility just outside your current role that interests you. We can shape that into a stretch goal with a realistic first step." }
+    ],
+    faq: [
+      { q: "How many PTO days do I have left?", a: "You can check your current PTO balance directly in the HR system under your profile. Want me to walk you through exactly where to find it?" },
+      { q: "What's our parental leave policy?", a: "Here's a short summary of eligibility and timing. For your specific situation, I'd also recommend confirming details with your HR generalist before you finalize dates." },
+      { q: "How do I update my direct deposit info?", a: "That's a quick self-service update in the HR system under Payment Details. If you hit an error, that's when it's worth opening a ticket instead of troubleshooting solo." }
+    ],
+    mgr: [
+      { q: "How do I start a PIP conversation?", a: "Lead with the specific gap, not a general concern. State the expectation, where performance is falling short of it, and what success looks like going forward, then give the colleague space to respond." },
+      { q: "What should I say in a coaching conversation about missed deadlines?", a: "Ask what's getting in the way before you assume the cause. Then agree on one concrete change to try before the next deadline, rather than a long list of fixes at once." },
+      { q: "How do I document a performance conversation?", a: "Note the date, what was discussed, what was agreed to, and the follow-up date. Keep it factual and specific. That record protects both you and the colleague if the conversation needs to be referenced later." }
+    ]
+  };
+
+  let currentBot = 'dev';
+
+  function renderChips(){
+    const chipsEl = document.getElementById('chips');
+    chipsEl.innerHTML = '';
+    conversations[currentBot].forEach((pair, idx) => {
+      const chip = document.createElement('div');
+      chip.className = 'chip';
+      chip.textContent = pair.q;
+      chip.onclick = () => askQuestion(idx);
+      chipsEl.appendChild(chip);
+    });
+  }
+
+  function setBot(bot){
+    currentBot = bot;
+    document.querySelectorAll('.bot-tab').forEach(t => t.classList.toggle('active', t.dataset.bot === bot));
+    const win = document.getElementById('chat-window');
+    win.innerHTML = '<div class="chat-empty" id="chat-empty">Pick a question below to start a sample conversation.</div>';
+    renderChips();
+  }
+
+  function askQuestion(idx){
+    const pair = conversations[currentBot][idx];
+    const win = document.getElementById('chat-window');
+    const empty = document.getElementById('chat-empty');
+    if(empty) empty.remove();
+
+    const userBubble = document.createElement('div');
+    userBubble.className = 'chat-bubble user';
+    userBubble.textContent = pair.q;
+    win.appendChild(userBubble);
+
+    setTimeout(() => {
+      const botBubble = document.createElement('div');
+      botBubble.className = 'chat-bubble bot';
+      botBubble.textContent = pair.a;
+      win.appendChild(botBubble);
+      win.scrollTop = win.scrollHeight;
+    }, 300);
+
+    win.scrollTop = win.scrollHeight;
+  }
+
+  renderChips();
+</script>
+</body>
+</html>
